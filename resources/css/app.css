@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --font-heading: 'Bebas Neue', sans-serif;
+    --font-urdu: 'Noto Nastaliq Urdu', serif;
+
+    --color-nawabi-red: #D7262E;
+    --color-nawabi-red-hover: #b91c1c;
+    --color-nawabi-gold: #D97706;
+    --color-nawabi-gold-bright: #F59E0B;
+    --color-nawabi-amber-light: #FEF3C7;
+    --color-nawabi-yellow: #FBBF24;
+    --color-nawabi-black: #1E1B18;
+    --color-nawabi-charcoal: #292524;
+    --color-nawabi-cream: #FAF5EB;
+    --color-nawabi-bg-light: #FDF9F0;
+    --color-nawabi-card-bg: #FFFFFF;
+
+    --animate-gold-glow: gold-glow 2s ease-in-out infinite alternate;
+    --animate-float-slow-left: float-slow-left 8s ease-in-out infinite alternate;
+    --animate-float-slow-right: float-slow-right 10s ease-in-out infinite alternate;
+    --animate-float-slow-rotate: float-slow-rotate 14s ease-in-out infinite alternate;
+    --animate-food-bounce: food-bounce 4s ease-in-out infinite alternate;
+
+    @keyframes gold-glow {
+        from { text-shadow: 0 0 4px rgba(217, 119, 6, 0.3), 0 0 10px rgba(245, 158, 11, 0.2); }
+        to { text-shadow: 0 0 10px rgba(217, 119, 6, 0.6), 0 0 18px rgba(245, 158, 11, 0.35); }
+    }
+    @keyframes float-slow-left {
+        0% { transform: translateY(0px) rotate(0deg) scale(1); }
+        50% { transform: translateY(-16px) rotate(6deg) scale(1.06); }
+        100% { transform: translateY(0px) rotate(0deg) scale(1); }
+    }
+    @keyframes float-slow-right {
+        0% { transform: translateY(0px) rotate(0deg) scale(1); }
+        50% { transform: translateY(18px) rotate(-6deg) scale(1.05); }
+        100% { transform: translateY(0px) rotate(0deg) scale(1); }
+    }
+    @keyframes float-slow-rotate {
+        0% { transform: translateY(0px) rotate(0deg) scale(1); }
+        50% { transform: translateY(-12px) rotate(12deg) scale(1.08); }
+        100% { transform: translateY(0px) rotate(0deg) scale(1); }
+    }
+    @keyframes food-bounce {
+        0% { transform: translateY(0px) scale(1); }
+        50% { transform: translateY(-10px) scale(1.04); }
+        100% { transform: translateY(0px) scale(1); }
+    }
+}
+
+/* Fast Food Doodles SVG Background Pattern */
+.bg-food-pattern {
+    background-color: #FAF5EB;
+    background-image: 
+        radial-gradient(circle at 15% 20%, rgba(254, 243, 199, 0.7) 0%, transparent 40%),
+        radial-gradient(circle at 85% 60%, rgba(254, 226, 226, 0.6) 0%, transparent 45%),
+        radial-gradient(circle at 50% 90%, rgba(254, 240, 138, 0.5) 0%, transparent 40%),
+        url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d97706' fill-opacity='0.07' fill-rule='evenodd'%3E%3C!-- Pizza slice --%3E%3Cpath d='M15 10 L35 15 L25 40 Z M22 20 A2 2 0 1 0 22 24 A2 2 0 1 0 22 20 M28 26 A1.5 1.5 0 1 0 28 29 A1.5 1.5 0 1 0 28 26' /%3E%3C!-- Burger --%3E%3Cpath d='M80 15 C75 15 70 18 70 23 L95 23 C95 18 90 15 85 15 Z M68 25 L97 25 C98 25 98 27 97 27 L68 27 C67 27 67 25 68 25 Z M70 29 L95 29 C95 33 90 35 85 35 C75 35 70 33 70 29 Z' /%3E%3C!-- Drink cup --%3E%3Cpath d='M82 70 L80 60 L96 60 L94 70 L91 95 L85 95 Z M87 52 L89 60 M85 58 L91 58' stroke='%23d97706' stroke-width='1.5' stroke-opacity='0.08' fill='none'/%3E%3C!-- Fries box --%3E%3Cpath d='M18 75 L32 75 L30 95 L20 95 Z M19 72 L21 62 M24 72 L25 58 M28 72 L29 64 M31 72 L32 60' stroke='%23d97706' stroke-width='1.5' stroke-opacity='0.08' fill='none'/%3E%3C!-- Chicken Drumstick --%3E%3Cpath d='M50 50 C45 45 42 55 48 60 C51 63 56 61 58 56 C60 52 56 46 50 50 Z M56 60 L62 66 M61 68 A2 2 0 1 0 65 67' stroke='%23d97706' stroke-width='1.5' stroke-opacity='0.08' fill='none'/%3E%3C!-- Chef Hat / Crown --%3E%3Cpath d='M50 15 L52 22 L45 18 L46 25 L58 25 L59 18 L54 22 Z' /%3E%3C!-- Cutlery / Fork --%3E%3Cpath d='M105 105 L115 115 M112 102 L118 108' stroke='%23d97706' stroke-width='1.2' stroke-opacity='0.08'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Light Mode Custom scrollbars */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #FAF5EB;
+}
+::-webkit-scrollbar-thumb {
+    background: #FCD34D;
+    border-radius: 4px;
+    border: 2px solid #FAF5EB;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #F59E0B;
+}
+
+::selection {
+    background: #D7262E;
+    color: #FFFFFF;
+}

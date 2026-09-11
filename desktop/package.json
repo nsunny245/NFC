@@ -1,0 +1,59 @@
+{
+  "name": "nawabi-food-corner-pos",
+  "version": "2.0.0",
+  "description": "Nawabi Food Corner POS - Standalone Offline-First Desktop Terminal",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:win": "electron-builder --win nsis:ia32,x64",
+    "build:mac": "electron-builder --mac dmg,zip",
+    "build:all": "electron-builder -mw"
+  },
+  "keywords": [
+    "pos",
+    "restaurant",
+    "thermal-printer",
+    "escpos",
+    "offline-first"
+  ],
+  "author": "Nawabi Food Corner",
+  "license": "Proprietary",
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "better-sqlite3": "^9.6.0"
+  },
+  "build": {
+    "appId": "com.nawabifoodcorner.pos",
+    "productName": "Nawabi Food Corner POS",
+    "copyright": "Copyright © 2026 Nawabi Food Corner",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "../public/images/logo_circular.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Nawabi Food Corner POS"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "../public/images/logo_circular.png",
+      "category": "public.app-category.business"
+    }
+  }
+}
