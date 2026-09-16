@@ -284,8 +284,11 @@ class POSDashboard extends Page
         $this->shiftJazzCashSales = (float) $orders->where('payment_method', 'jazzcash')->sum('total');
         $this->shiftEasyPaisaSales = (float) $orders->where('payment_method', 'easypaisa')->sum('total');
 
-        // Expenses during shift
-        $expenses = Expense::whereBetween('expense_date', [$start->toDateString(), $end->toDateString()])->get();
+        // Expenses during shift (using full day timestamps to support date/datetime storage in all DB drivers)
+        $expenses = Expense::whereBetween('expense_date', [
+            $start->toDateString() . ' 00:00:00',
+            $end->toDateString() . ' 23:59:59',
+        ])->get();
         $this->shiftExpensesTotal = (float) $expenses->sum('amount');
         $this->shiftExpensesList = $expenses->map(function($e) {
             return [

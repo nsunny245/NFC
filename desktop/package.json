@@ -19,7 +19,7 @@
   "author": "Nawabi Food Corner",
   "license": "Proprietary",
   "devDependencies": {
-    "electron": "^31.0.0",
+    "electron": "^44.3.0",
     "electron-builder": "^24.13.3"
   },
   "dependencies": {

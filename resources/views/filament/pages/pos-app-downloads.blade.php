@@ -497,35 +497,34 @@
                     <!-- Title & Subtitle -->
                     <div>
                         <h3 class="nfc-app-title">Windows POS Terminal</h3>
-                        <p class="nfc-app-sub">For Windows 10 & 11 Touchscreen Registers</p>
+                        <p class="nfc-app-sub">Universal Build for Windows 7 (32/64-bit), 8, 10 & 11</p>
                     </div>
 
                     <!-- Feature Checklist -->
                     <ul class="nfc-checklist">
                         <li class="nfc-check-item">
                             <span class="nfc-check-bullet">✓</span>
-                            <span>Direct Thermal Receipt Printing (USB / COM)</span>
+                            <span><b>Universal Compatibility:</b> Runs on Windows 7, 8, 10 & 11 (32-bit & 64-bit)</span>
                         </li>
                         <li class="nfc-check-item">
                             <span class="nfc-check-bullet">✓</span>
-                            <span>100% Offline order taking & shift balance</span>
+                            <span>Direct 80mm & 58mm Thermal Receipt Printing (ESC/POS)</span>
                         </li>
                         <li class="nfc-check-item">
                             <span class="nfc-check-bullet">✓</span>
-                            <span>Auto Cloud Sync when internet restores</span>
+                            <span>Ultra-lightweight (< 1 MB) - Runs fast on 2GB/4GB RAM cash counter PCs</span>
                         </li>
                         <li class="nfc-check-item">
                             <span class="nfc-check-bullet">✓</span>
-                            <span>Touchscreen Kiosk Fullscreen Mode</span>
+                            <span>1-Click Desktop Shortcut with official restaurant logo</span>
                         </li>
                     </ul>
 
                     <!-- 3-Step Guide -->
                     <div class="nfc-setup-box">
-                        <div style="font-weight: 800; margin-bottom: 0.25rem;">Easy Setup (30 Seconds):</div>
-                        <div>1. Click <b>Download .exe</b> below.</div>
-                        <div>2. Double-click the downloaded file to install.</div>
-                        <div>3. Enter terminal code (e.g. <b>POS-01</b>) and start billing!</div>
+                        <div style="font-weight: 800; margin-bottom: 0.25rem;">Easy Setup (2 Steps):</div>
+                        <div>1. Download <b>.exe</b> or <b>.zip</b> below.</div>
+                        <div>2. Double-click to launch or run <b>Install-Desktop-Shortcut.bat</b>.</div>
                     </div>
                 </div>
 

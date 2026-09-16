@@ -7,8 +7,8 @@ let mainWindow = null;
 // Config: Default POS Cloud/Local URL & Terminal Token
 const configPath = path.join(app.getPath('userData'), 'pos-config.json');
 let posConfig = {
-  posUrl: 'http://127.0.0.1:8003/pos',
-  apiUrl: 'http://127.0.0.1:8003/api/pos/sync',
+  posUrl: 'https://nawabifoodcorner.com/pos',
+  apiUrl: 'https://nawabifoodcorner.com/api/pos/sync',
   terminalCode: 'POS-01',
   printerName: '',
   paperWidthMm: 80,

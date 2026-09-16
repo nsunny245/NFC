@@ -20,6 +20,9 @@
 /storage/pail
 /vendor
 /scratch
+/desktop/node_modules
+/vendor.zip
+/public/downloads/*.dmg
 Homestead.json
 Homestead.yaml
 Thumbs.db
