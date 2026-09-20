@@ -6,21 +6,25 @@
     <title>Nawabi Food Corner - Standalone Offline POS Station</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
-        body { background: #0f172a; color: #f8fafc; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+        body { background: #0b1120; color: #f8fafc; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
-        /* Appbar */
+        /* Top Appbar */
         .appbar {
-            height: 52px; background: #1e293b; border-bottom: 2px solid #334155;
+            height: 54px; background: #1e293b; border-bottom: 2px solid #334155;
             display: flex; align-items: center; justify-content: space-between; padding: 0 16px; flex-shrink: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
         .brand { display: flex; align-items: center; gap: 10px; }
-        .logo-ring { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #d4a437; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900; color: #b45309; }
-        .brand-text h1 { font-size: 14px; font-weight: 900; color: #f8fafc; letter-spacing: -0.5px; }
-        .brand-text span { font-size: 10px; font-weight: 800; color: #d4a437; text-transform: uppercase; }
+        .logo-ring {
+            width: 38px; height: 38px; border-radius: 50%; border: 2.5px solid #d4a437; background: #fff;
+            display: flex; align-items: center; justify-content: center; font-size: 19px; box-shadow: 0 0 12px rgba(212,164,55,0.4);
+        }
+        .brand-text h1 { font-size: 14px; font-weight: 900; color: #f8fafc; letter-spacing: -0.3px; }
+        .brand-text span { font-size: 10px; font-weight: 800; color: #d4a437; text-transform: uppercase; letter-spacing: 0.5px; }
 
         .appbar-actions { display: flex; align-items: center; gap: 10px; }
         .sync-badge {
-            display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 9999px;
+            display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 9999px;
             font-size: 11px; font-weight: 900; cursor: pointer; border: 1.5px solid transparent; transition: all 0.2s;
         }
         .sync-badge.online { background: rgba(16, 185, 129, 0.15); border-color: #10b981; color: #34d399; }
@@ -29,143 +33,162 @@
         .btn-sync {
             background: linear-gradient(135deg, #d4a437 0%, #b45309 100%); color: #000; font-weight: 900;
             font-size: 11px; border: none; padding: 6px 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 5px;
+            box-shadow: 0 2px 8px rgba(212, 164, 55, 0.3);
         }
-        .btn-sync:hover { opacity: 0.9; }
+        .btn-sync:hover { opacity: 0.95; transform: translateY(-1px); }
 
         .btn-till {
             background: rgba(212, 164, 55, 0.15); border: 1.5px solid #d4a437; color: #fef08a; font-weight: 800;
-            font-size: 11px; padding: 5px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px;
+            font-size: 11px; padding: 6px 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px;
         }
         .btn-till:hover { background: rgba(212, 164, 55, 0.25); }
 
-        /* Main POS Grid */
-        .main-container { display: flex; flex: 1; height: calc(100vh - 52px); overflow: hidden; }
+        /* Main Workspace */
+        .main-container { display: flex; flex: 1; height: calc(100vh - 54px); overflow: hidden; }
 
-        /* Menu Section (Left & Center) */
-        .menu-section { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #0b1120; }
+        /* Left Menu Section */
+        .menu-section { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #0f172a; }
         
         .toolbar {
             padding: 10px 14px; background: #1e293b; border-bottom: 1px solid #334155; display: flex; gap: 10px; align-items: center;
         }
         .search-input {
-            flex: 1; background: #0f172a; border: 1.5px solid #334155; border-radius: 8px; padding: 8px 12px;
-            color: #fff; font-size: 13px; outline: none;
+            flex: 1; background: #0b1120; border: 1.5px solid #334155; border-radius: 8px; padding: 9px 14px;
+            color: #fff; font-size: 13px; font-weight: 600; outline: none; transition: border-color 0.2s;
         }
         .search-input:focus { border-color: #d4a437; }
 
         .categories-bar {
-            display: flex; gap: 8px; padding: 8px 14px; overflow-x: auto; background: #131d31; border-bottom: 1px solid #1e293b; flex-shrink: 0;
+            display: flex; gap: 8px; padding: 9px 14px; overflow-x: auto; background: #131d31; border-bottom: 1px solid #1e293b; flex-shrink: 0;
+            scrollbar-width: thin;
         }
         .category-tab {
             padding: 6px 14px; border-radius: 9999px; background: #1e293b; color: #cbd5e1; font-size: 11px; font-weight: 800;
-            cursor: pointer; white-space: nowrap; border: 1px solid #334155; transition: all 0.2s;
+            cursor: pointer; white-space: nowrap; border: 1px solid #334155; transition: all 0.15s; display: flex; align-items: center; gap: 6px;
         }
-        .category-tab.active { background: #d4a437; color: #000; border-color: #d4a437; }
+        .category-tab:hover { border-color: #d4a437; color: #fff; }
+        .category-tab.active { background: #d4a437; color: #000; border-color: #d4a437; font-weight: 900; box-shadow: 0 2px 8px rgba(212, 164, 55, 0.35); }
+        .category-tab .tab-badge {
+            background: rgba(0, 0, 0, 0.25); padding: 1px 6px; border-radius: 9999px; font-size: 9.5px;
+        }
+        .category-tab.active .tab-badge {
+            background: #000; color: #d4a437;
+        }
 
         .items-grid {
-            flex: 1; overflow-y: auto; padding: 12px; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; align-content: start;
+            flex: 1; overflow-y: auto; padding: 14px; display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 12px; align-content: start;
         }
         .item-card {
-            background: #1e293b; border: 1.5px solid #334155; border-radius: 12px; padding: 10px; cursor: pointer;
-            display: flex; flex-direction: column; justify-content: space-between; gap: 8px; transition: transform 0.15s, border-color 0.15s;
+            background: #1e293b; border: 1.5px solid #334155; border-radius: 12px; padding: 12px; cursor: pointer;
+            display: flex; flex-direction: column; justify-content: space-between; gap: 8px; transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
         }
-        .item-card:hover { transform: translateY(-2px); border-color: #d4a437; }
-        .item-card-title { font-size: 12px; font-weight: 800; color: #f8fafc; line-height: 1.3; }
-        .item-card-cat { font-size: 9px; color: #94a3b8; text-transform: uppercase; font-weight: 700; }
-        .item-card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
-        .item-card-price { font-size: 13px; font-weight: 900; color: #fbbf24; }
-        .item-add-badge { background: #d4a437; color: #000; border-radius: 6px; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px; }
+        .item-card:hover { transform: translateY(-2px); border-color: #d4a437; box-shadow: 0 6px 16px rgba(0,0,0,0.3); }
+        .item-card-header { display: flex; flex-direction: column; gap: 4px; }
+        .item-card-cat { font-size: 9px; color: #d4a437; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; }
+        .item-card-title { font-size: 12.5px; font-weight: 800; color: #f8fafc; line-height: 1.3; }
+        .item-card-desc { font-size: 10px; color: #94a3b8; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .item-card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding-top: 6px; border-top: 1px solid #334155; }
+        .item-card-price { font-size: 13.5px; font-weight: 900; color: #fbbf24; font-family: monospace; }
+        .item-add-badge { background: #d4a437; color: #000; border-radius: 6px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; }
 
-        /* Cart Section (Right Side) */
+        /* Right Cart Sidebar */
         .cart-section {
-            width: 380px; background: #182234; border-left: 2px solid #334155; display: flex; flex-direction: column; flex-shrink: 0;
+            width: 390px; background: #131d31; border-left: 2px solid #334155; display: flex; flex-direction: column; flex-shrink: 0;
         }
-        .cart-header { padding: 10px 14px; background: #1e293b; border-bottom: 1px solid #334155; display: flex; flex-direction: column; gap: 8px; }
+        .cart-header { padding: 12px 14px; background: #1e293b; border-bottom: 1px solid #334155; display: flex; flex-direction: column; gap: 10px; }
         .order-types { display: flex; gap: 6px; }
         .order-type-btn {
-            flex: 1; padding: 8px 4px; font-size: 11px; font-weight: 800; text-transform: uppercase; border-radius: 8px;
-            background: #0f172a; border: 1.5px solid #334155; color: #cbd5e1; cursor: pointer; text-align: center; transition: all 0.15s;
+            flex: 1; padding: 8px 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; border-radius: 8px;
+            background: #0b1120; border: 1.5px solid #334155; color: #cbd5e1; cursor: pointer; text-align: center; transition: all 0.15s;
         }
+        .order-type-btn:hover { border-color: #d4a437; }
         .order-type-btn.active { background: linear-gradient(135deg, #d4a437 0%, #b45309 100%); color: #000; border-color: #d4a437; font-weight: 900; }
 
         .table-row { display: flex; gap: 8px; align-items: center; }
         .table-select {
-            flex: 1; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #fff; padding: 6px 8px; font-size: 11px; font-weight: 800; outline: none;
+            flex: 1; background: #0b1120; border: 1px solid #334155; border-radius: 6px; color: #fff; padding: 7px 10px; font-size: 11px; font-weight: 800; outline: none;
         }
 
         .delivery-row { display: none; flex-direction: column; gap: 6px; }
-        .delivery-input { background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #fff; padding: 6px 8px; font-size: 11px; outline: none; }
+        .delivery-input { background: #0b1120; border: 1px solid #334155; border-radius: 6px; color: #fff; padding: 7px 10px; font-size: 11px; outline: none; }
+        .delivery-input:focus { border-color: #d4a437; }
 
-        .cart-items { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+        .cart-items { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
         .cart-item {
-            background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 8px 10px; display: flex;
+            background: #0f172a; border: 1.5px solid #334155; border-radius: 10px; padding: 9px 12px; display: flex;
             justify-content: space-between; align-items: center; gap: 8px;
         }
         .cart-item-info { flex: 1; }
-        .cart-item-name { font-size: 11px; font-weight: 800; color: #f8fafc; }
-        .cart-item-portion { font-size: 9px; color: #d4a437; font-weight: 700; }
-        .cart-item-price { font-size: 10px; color: #94a3b8; }
+        .cart-item-name { font-size: 11.5px; font-weight: 800; color: #f8fafc; }
+        .cart-item-price { font-size: 10px; color: #94a3b8; font-family: monospace; }
         .cart-item-stepper { display: flex; align-items: center; gap: 6px; }
         .step-btn {
-            width: 24px; height: 24px; border-radius: 4px; background: #334155; color: #fff; border: none;
-            font-weight: 900; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            width: 26px; height: 26px; border-radius: 6px; background: #334155; color: #fff; border: none;
+            font-weight: 900; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s;
         }
-        .step-btn:hover { background: #475569; }
-        .item-qty { font-size: 12px; font-weight: 900; min-width: 18px; text-align: center; }
-        .item-total { font-size: 12px; font-weight: 900; color: #fbbf24; min-width: 55px; text-align: right; }
+        .step-btn:hover { background: #d4a437; color: #000; }
+        .item-qty { font-size: 12px; font-weight: 900; min-width: 20px; text-align: center; }
+        .item-total { font-size: 12.5px; font-weight: 900; color: #fbbf24; min-width: 65px; text-align: right; font-family: monospace; }
 
-        .cart-footer { padding: 12px 14px; background: #1e293b; border-top: 1px solid #334155; }
-        .summary-row { display: flex; justify-content: space-between; font-size: 11px; color: #cbd5e1; margin-bottom: 4px; font-weight: 700; }
-        .summary-row.total { font-size: 16px; font-weight: 900; color: #fbbf24; border-top: 1px dashed #475569; padding-top: 6px; margin-top: 6px; }
+        .cart-footer { padding: 14px; background: #1e293b; border-top: 1.5px solid #334155; }
+        .summary-row { display: flex; justify-content: space-between; font-size: 11.5px; color: #cbd5e1; margin-bottom: 5px; font-weight: 700; }
+        .summary-row.total { font-size: 17px; font-weight: 900; color: #fbbf24; border-top: 1.5px dashed #475569; padding-top: 8px; margin-top: 8px; font-family: monospace; }
 
-        .cart-actions { display: flex; gap: 8px; margin-top: 10px; }
-        .btn-clear { background: #475569; color: #fff; border: none; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 11px; cursor: pointer; flex: 1; }
-        .btn-checkout { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; border: none; padding: 10px; border-radius: 8px; font-weight: 900; font-size: 13px; cursor: pointer; flex: 2; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+        .cart-actions { display: flex; gap: 8px; margin-top: 12px; }
+        .btn-clear { background: #475569; color: #fff; border: none; padding: 11px; border-radius: 8px; font-weight: 800; font-size: 11.5px; cursor: pointer; flex: 1; }
+        .btn-clear:hover { background: #64748b; }
+        .btn-checkout { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; border: none; padding: 11px; border-radius: 8px; font-weight: 900; font-size: 13px; cursor: pointer; flex: 2; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4); text-transform: uppercase; }
+        .btn-checkout:hover { opacity: 0.95; transform: translateY(-1px); }
 
         /* Modals */
         .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); display: none; align-items: center;
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); display: none; align-items: center;
             justify-content: center; z-index: 9999; backdrop-filter: blur(4px);
         }
         .modal-overlay.active { display: flex; }
         .modal-box {
-            background: #1e293b; border: 2px solid #d4a437; border-radius: 16px; width: 440px; max-width: 95vw;
-            padding: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 14px;
+            background: #1e293b; border: 2px solid #d4a437; border-radius: 16px; width: 480px; max-width: 95vw;
+            padding: 22px; box-shadow: 0 20px 50px rgba(0,0,0,0.7); display: flex; flex-direction: column; gap: 14px;
         }
         .modal-title { font-size: 16px; font-weight: 900; color: #fbbf24; display: flex; justify-content: space-between; align-items: center; }
-        .modal-close { background: none; border: none; color: #94a3b8; font-size: 20px; cursor: pointer; }
+        .modal-close { background: none; border: none; color: #94a3b8; font-size: 24px; cursor: pointer; line-height: 1; }
+        .modal-close:hover { color: #fff; }
         
         .chips-row { display: flex; gap: 6px; flex-wrap: wrap; }
         .chip {
-            padding: 6px 12px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #fff;
-            font-size: 11px; font-weight: 800; cursor: pointer;
+            padding: 7px 13px; background: #0b1120; border: 1.5px solid #334155; border-radius: 8px; color: #fff;
+            font-size: 11px; font-weight: 800; cursor: pointer; font-family: monospace; transition: all 0.15s;
         }
         .chip:hover { border-color: #d4a437; color: #fbbf24; }
 
-        .payment-methods { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+        .payment-methods { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
         .pay-method {
-            padding: 8px; background: #0f172a; border: 1.5px solid #334155; border-radius: 8px; color: #fff;
-            font-size: 11px; font-weight: 800; text-align: center; cursor: pointer;
+            padding: 10px; background: #0b1120; border: 1.5px solid #334155; border-radius: 8px; color: #cbd5e1;
+            font-size: 11.5px; font-weight: 800; text-align: center; cursor: pointer; transition: all 0.15s;
         }
-        .pay-method.active { border-color: #10b981; background: rgba(16, 185, 129, 0.15); color: #34d399; }
+        .pay-method:hover { border-color: #d4a437; }
+        .pay-method.active { border-color: #10b981; background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 900; }
 
         .input-group { display: flex; flex-direction: column; gap: 4px; }
-        .input-label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: #94a3b8; }
+        .input-label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; }
         .money-input {
-            background: #0f172a; border: 1.5px solid #334155; border-radius: 8px; padding: 8px 12px; font-size: 18px;
-            font-weight: 900; color: #fbbf24; outline: none;
+            background: #0b1120; border: 1.5px solid #334155; border-radius: 8px; padding: 10px 14px; font-size: 20px;
+            font-weight: 900; color: #fbbf24; outline: none; font-family: monospace;
         }
+        .money-input:focus { border-color: #d4a437; }
 
         .change-box {
-            background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-radius: 8px; padding: 10px;
+            background: rgba(16, 185, 129, 0.12); border: 1.5px solid #10b981; border-radius: 8px; padding: 12px 14px;
             display: flex; justify-content: space-between; align-items: center;
         }
-        .change-val { font-size: 18px; font-weight: 900; color: #34d399; }
+        .change-val { font-size: 20px; font-weight: 900; color: #34d399; font-family: monospace; }
 
         .btn-confirm-pay {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; border: none; padding: 12px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; border: none; padding: 13px;
             border-radius: 10px; font-size: 14px; font-weight: 900; cursor: pointer; text-transform: uppercase;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
         }
+        .btn-confirm-pay:hover { opacity: 0.95; transform: translateY(-1px); }
 
         /* 80mm ESC/POS Thermal Receipt Print Styling */
         @media print {
@@ -215,17 +238,11 @@
         <!-- Left: Menu Explorer -->
         <section class="menu-section">
             <div class="toolbar">
-                <input type="text" id="menu-search" class="search-input" placeholder="Search menu dishes, Karahi, Burgers, BBQ..." oninput="filterMenu()">
+                <input type="text" id="menu-search" class="search-input" placeholder="🔍 Search dishes, pizza, burgers, shawarma, doners, platters, deals..." oninput="filterMenu()">
             </div>
             
             <div class="categories-bar" id="category-tabs">
-                <div class="category-tab active" onclick="selectCategory('all', this)">ALL MENU</div>
-                <div class="category-tab" onclick="selectCategory('Karahi & Handi', this)">KARAHI & HANDI</div>
-                <div class="category-tab" onclick="selectCategory('BBQ & Grills', this)">BBQ & GRILLS</div>
-                <div class="category-tab" onclick="selectCategory('Fast Food & Burgers', this)">FAST FOOD</div>
-                <div class="category-tab" onclick="selectCategory('Biryani & Rice', this)">BIRYANI</div>
-                <div class="category-tab" onclick="selectCategory('Tandoor & Breads', this)">TANDOOR</div>
-                <div class="category-tab" onclick="selectCategory('Drinks & Desserts', this)">BEVERAGES</div>
+                <!-- Dynamically populated categories -->
             </div>
 
             <div class="items-grid" id="menu-grid">
@@ -251,82 +268,97 @@
                         <option value="Table 02">Table 02 (Main Dining)</option>
                         <option value="Table 03">Table 03 (Main Dining)</option>
                         <option value="Table 04">Table 04 (Main Dining)</option>
-                        <option value="Family 01">Family 01 (Hall)</option>
-                        <option value="Family 02">Family 02 (Hall)</option>
-                        <option value="Dera Majlis 01">Dera Majlis 01 (Outdoor)</option>
-                        <option value="Dera Majlis 02">Dera Majlis 02 (Outdoor)</option>
-                        <option value="Takeaway Counter">Takeaway Counter</option>
+                        <option value="Table 05">Table 05 (Main Dining)</option>
+                        <option value="Table 06">Table 06 (Main Dining)</option>
+                        <option value="Table 07">Table 07 (Main Dining)</option>
+                        <option value="Table 08">Table 08 (Main Dining)</option>
+                        <option value="Table 09">Table 09 (Main Dining)</option>
+                        <option value="Table 10">Table 10 (Main Dining)</option>
+                        <option value="Family Hall 01">Family Hall 01</option>
+                        <option value="Family Hall 02">Family Hall 02</option>
+                        <option value="Dera Seating 01">Dera Outdoor 01</option>
+                        <option value="Dera Seating 02">Dera Outdoor 02</option>
+                        <option value="VIP Lounge">VIP Royal Lounge</option>
                     </select>
                 </div>
 
-                <!-- Delivery Details (Delivery only) -->
+                <!-- Delivery Details Form (Delivery mode only) -->
                 <div class="delivery-row" id="delivery-row">
-                    <input type="text" id="deliv-phone" class="delivery-input" placeholder="Guest Phone (e.g. 0300-1234567)">
-                    <input type="text" id="deliv-address" class="delivery-input" placeholder="Delivery House/Street Address">
+                    <input type="text" id="deliv-name" class="delivery-input" placeholder="Customer Name (e.g. Usman Ali)">
+                    <input type="tel" id="deliv-phone" class="delivery-input" placeholder="Customer Phone (0300-1234567)">
+                    <input type="text" id="deliv-address" class="delivery-input" placeholder="Delivery House/Street Address...">
                 </div>
             </div>
 
+            <!-- Cart Items Scrollable List -->
             <div class="cart-items" id="cart-list">
-                <div style="text-align: center; color: #64748b; font-size: 11px; margin-top: 40px;">
-                    Cart is empty.<br>Tap items on the left to add.
-                </div>
+                <!-- Dynamic cart item rows inserted here -->
             </div>
 
+            <!-- Cart Totals & Settle Action -->
             <div class="cart-footer">
                 <div class="summary-row">
-                    <span>Subtotal:</span>
+                    <span>Items Subtotal:</span>
                     <span id="lbl-subtotal">Rs 0</span>
                 </div>
                 <div class="summary-row">
-                    <span>GST Tax (5%):</span>
+                    <span>GST Tax (0%):</span>
                     <span id="lbl-tax">Rs 0</span>
                 </div>
                 <div class="summary-row total">
-                    <span>TOTAL:</span>
+                    <span>NET TOTAL:</span>
                     <span id="lbl-total">Rs 0</span>
                 </div>
 
                 <div class="cart-actions">
                     <button class="btn-clear" onclick="clearCart()">🗑️ CLEAR</button>
-                    <button class="btn-checkout" onclick="openPaymentModal()">💳 PAY & PRINT</button>
+                    <button class="btn-checkout" onclick="openPaymentModal()">💳 CHECKOUT</button>
                 </div>
             </div>
         </aside>
     </main>
 
-    <!-- Payment & Thermal Receipt Modal -->
+    <!-- Checkout / Payment Modal -->
     <div class="modal-overlay" id="payment-modal">
         <div class="modal-box">
             <div class="modal-title">
-                <span>💰 Settle Bill & Print 80mm</span>
+                <span>💰 Settle Bill & Print Receipt</span>
                 <button class="modal-close" onclick="closePaymentModal()">&times;</button>
             </div>
 
-            <div class="summary-row total" style="margin: 0; font-size: 20px;">
-                <span>Bill Total:</span>
-                <span id="modal-bill-total">Rs 0</span>
+            <div style="text-align: center; padding: 8px 0;">
+                <span style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">Total Bill Payable</span>
+                <div style="font-size: 30px; font-weight: 900; color: #fbbf24; font-family: monospace;" id="modal-bill-total">Rs 0</div>
             </div>
 
+            <!-- Payment Method Tabs -->
             <div class="payment-methods">
                 <div class="pay-method active" onclick="setPaymentMethod('cash', this)">💵 CASH</div>
-                <div class="pay-method" onclick="setPaymentMethod('card', this)">💳 CREDIT CARD</div>
+                <div class="pay-method" onclick="setPaymentMethod('card', this)">💳 BANK / CARD</div>
                 <div class="pay-method" onclick="setPaymentMethod('jazzcash', this)">📱 JAZZCASH</div>
-                <div class="pay-method" onclick="setPaymentMethod('easypaisa', this)">📱 EASYPAISA</div>
+                <div class="pay-method" onclick="setPaymentMethod('easypaisa', this)">🟢 EASYPAISA</div>
             </div>
 
+            <!-- Quick Cash Tender Chips -->
             <div class="input-group">
-                <span class="input-label">Cash Tendered (Received)</span>
-                <input type="number" id="tendered-amount" class="money-input" placeholder="0" oninput="calculateChange()">
+                <span class="input-label">Quick Tender Chips</span>
+                <div class="chips-row">
+                    <div class="chip" onclick="setTenderedExact()">Exact</div>
+                    <div class="chip" onclick="setTenderedAmount(500)">Rs 500</div>
+                    <div class="chip" onclick="setTenderedAmount(1000)">Rs 1,000</div>
+                    <div class="chip" onclick="setTenderedAmount(2000)">Rs 2,000</div>
+                    <div class="chip" onclick="setTenderedAmount(5000)">Rs 5,000</div>
+                    <div class="chip" onclick="setTenderedAmount(10000)">Rs 10,000</div>
+                </div>
             </div>
 
-            <div class="chips-row">
-                <button class="chip" onclick="setTenderedExact()">EXACT</button>
-                <button class="chip" onclick="setTenderedAmount(500)">Rs 500</button>
-                <button class="chip" onclick="setTenderedAmount(1000)">Rs 1,000</button>
-                <button class="chip" onclick="setTenderedAmount(2000)">Rs 2,000</button>
-                <button class="chip" onclick="setTenderedAmount(5000)">Rs 5,000</button>
+            <!-- Tendered Cash Input -->
+            <div class="input-group">
+                <span class="input-label">Customer Cash Tendered (Rs.)</span>
+                <input type="number" id="tendered-amount" class="money-input" value="0" oninput="calculateChange()">
             </div>
 
+            <!-- Change Return Calculation Display -->
             <div class="change-box">
                 <span style="font-size: 11px; font-weight: 800; color: #34d399;">CHANGE RETURN:</span>
                 <span class="change-val" id="change-amount">Rs 0</span>
@@ -351,18 +383,18 @@
                 <input type="number" id="opening-float-input" class="money-input" value="5000">
             </div>
 
-            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 6px; font-size: 11px;">
+            <div style="background: #0b1120; border: 1px solid #334155; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px; font-size: 11.5px;">
                 <div style="display: flex; justify-content: space-between;">
                     <span style="color: #94a3b8;">Offline Orders Billed:</span>
                     <b id="till-orders-count">0</b>
                 </div>
                 <div style="display: flex; justify-content: space-between;">
                     <span style="color: #94a3b8;">Gross Sales Total:</span>
-                    <b id="till-gross-sales" style="color: #fbbf24;">Rs 0</b>
+                    <b id="till-gross-sales" style="color: #fbbf24; font-family: monospace;">Rs 0</b>
                 </div>
-                <div style="display: flex; justify-content: space-between; border-top: 1px dashed #334155; padding-top: 6px;">
+                <div style="display: flex; justify-content: space-between; border-top: 1px dashed #334155; padding-top: 8px;">
                     <span style="color: #34d399; font-weight: 800;">Expected in Drawer:</span>
-                    <b id="till-expected-cash" style="color: #34d399; font-size: 13px;">Rs 5,000</b>
+                    <b id="till-expected-cash" style="color: #34d399; font-size: 14px; font-family: monospace;">Rs 5,000</b>
                 </div>
             </div>
 
@@ -376,9 +408,8 @@
     <div id="thermal-receipt">
         <div style="text-align: center; margin-bottom: 8px;">
             <div style="font-size: 15px; font-weight: bold;">NAWABI FOOD CORNER</div>
-            <div style="font-size: 10px;">ROYAL DINING & CATERING</div>
-            <div style="font-size: 9px;">Main Restaurant Hub, Multan</div>
-            <div style="font-size: 9px;">Phone: +92 300 0000000</div>
+            <div style="font-size: 10px;">ROYAL DINING & FAST FOOD</div>
+            <div style="font-size: 9px;">Main Hub • Call: +92 300 0000000</div>
             <div style="margin: 4px 0; border-top: 1px dashed #000;"></div>
             <div style="font-size: 11px; font-weight: bold;">CASHIER TAX INVOICE</div>
         </div>
@@ -409,7 +440,7 @@
                 <span id="rcpt-subtotal">Rs 0</span>
             </div>
             <div style="display: flex; justify-content: space-between;">
-                <span>GST Tax (5%):</span>
+                <span>GST Tax (0%):</span>
                 <span id="rcpt-tax">Rs 0</span>
             </div>
             <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; margin-top: 3px;">
@@ -433,31 +464,821 @@
     </div>
 
     <script>
-        // Seeded Menu Catalog
-        const MENU_CATALOG = [
-            { id: 1, name: "Chicken Karahi (Desi Ghee)", category: "Karahi & Handi", price: 1450 },
-            { id: 2, name: "Mutton Shinwari Karahi", category: "Karahi & Handi", price: 2200 },
-            { id: 3, name: "Chicken White Handi (Boneless)", category: "Karahi & Handi", price: 1550 },
-            { id: 4, name: "Chicken Makhni Handi", category: "Karahi & Handi", price: 1600 },
-            { id: 5, name: "Beef Seekh Kabab (4 Pcs)", category: "BBQ & Grills", price: 680 },
-            { id: 6, name: "Chicken Malai Boti (Plate)", category: "BBQ & Grills", price: 750 },
-            { id: 7, name: "Chicken Tikka Boti Plate", category: "BBQ & Grills", price: 650 },
-            { id: 8, name: "Nawabi Special Chappal Kabab", category: "BBQ & Grills", price: 720 },
-            { id: 9, name: "Nawabi Special Chicken Biryani", category: "Biryani & Rice", price: 420 },
-            { id: 10, name: "Mutton Dum Biryani (Royal)", category: "Biryani & Rice", price: 680 },
-            { id: 11, name: "Chinese Egg Fried Rice", category: "Biryani & Rice", price: 450 },
-            { id: 12, name: "Crispy Zinger Crunch Burger", category: "Fast Food & Burgers", price: 480 },
-            { id: 13, name: "Double Beef Cheese Burger", category: "Fast Food & Burgers", price: 650 },
-            { id: 14, name: "Crispy Golden Broast (Quarter)", category: "Fast Food & Burgers", price: 450 },
-            { id: 15, name: "Special Club Sandwich & Fries", category: "Fast Food & Burgers", price: 420 },
-            { id: 16, name: "Roghni Sesame Naan", category: "Tandoor & Breads", price: 70 },
-            { id: 17, name: "Garlic Butter Naan", category: "Tandoor & Breads", price: 90 },
-            { id: 18, name: "Fresh Tandoori Roti", category: "Tandoor & Breads", price: 30 },
-            { id: 19, name: "Fresh Mint Lemon Margarita", category: "Drinks & Desserts", price: 220 },
-            { id: 20, name: "Chilled Soft Drink (500ml)", category: "Drinks & Desserts", price: 120 },
-            { id: 21, name: "Mineral Water (Large)", category: "Drinks & Desserts", price: 100 },
-            { id: 22, name: "Royal Zafrani Kheer Cup", category: "Drinks & Desserts", price: 180 }
-        ];
+        // Exact 17 Live Categories & 88 Dishes from Live Database
+        const DEFAULT_CATEGORIES = [
+  {
+    "id": 1,
+    "name": "Special Flavours Pizza",
+    "slug": "special-flavours-pizza",
+    "icon": "🍕"
+  },
+  {
+    "id": 2,
+    "name": "Traditional Flavours Pizza",
+    "slug": "traditional-flavours-pizza",
+    "icon": "🍕"
+  },
+  {
+    "id": 3,
+    "name": "Stuff and Crown Pizza",
+    "slug": "stuff-crown-pizza",
+    "icon": "👑"
+  },
+  {
+    "id": 4,
+    "name": "Special Platter",
+    "slug": "special-platter",
+    "icon": "🍱"
+  },
+  {
+    "id": 5,
+    "name": "Doners",
+    "slug": "doners",
+    "icon": "🥙"
+  },
+  {
+    "id": 6,
+    "name": "Appetizers",
+    "slug": "appetizers",
+    "icon": "🍗"
+  },
+  {
+    "id": 7,
+    "name": "Spin Rolls",
+    "slug": "spin-rolls",
+    "icon": "🌯"
+  },
+  {
+    "id": 8,
+    "name": "Burgers",
+    "slug": "burgers",
+    "icon": "🍔"
+  },
+  {
+    "id": 9,
+    "name": "Fries",
+    "slug": "fries",
+    "icon": "🍟"
+  },
+  {
+    "id": 10,
+    "name": "Shawarma and Paratha Roll",
+    "slug": "shawarma-paratha-roll",
+    "icon": "🌯"
+  },
+  {
+    "id": 11,
+    "name": "Pasta",
+    "slug": "pasta",
+    "icon": "🍝"
+  },
+  {
+    "id": 12,
+    "name": "Sandwiches",
+    "slug": "sandwiches",
+    "icon": "🥪"
+  },
+  {
+    "id": 13,
+    "name": "Beverages",
+    "slug": "beverages",
+    "icon": "🥤"
+  },
+  {
+    "id": 14,
+    "name": "Adds On",
+    "slug": "adds-on",
+    "icon": "🧀"
+  },
+  {
+    "id": 15,
+    "name": "Pizza Buster Deals",
+    "slug": "pizza-buster-deals",
+    "icon": "⚡"
+  },
+  {
+    "id": 16,
+    "name": "Doner Deals",
+    "slug": "doner-deals",
+    "icon": "🥙"
+  },
+  {
+    "id": 17,
+    "name": "Birthday Deals",
+    "slug": "birthday-deals",
+    "icon": "🎂"
+  }
+];
+        const DEFAULT_MENU_ITEMS = [
+  {
+    "id": 1,
+    "name": "Special Nawabi Pizza",
+    "category": "Special Flavours Pizza",
+    "category_id": 1,
+    "price": 880,
+    "description": "Our crown jewel pizza loaded with spiced chicken, sausages, bell peppers, olives, mushrooms, and signature Nawabi cream sauce."
+  },
+  {
+    "id": 2,
+    "name": "Malai Boti Pizza",
+    "category": "Special Flavours Pizza",
+    "category_id": 1,
+    "price": 880,
+    "description": "Creamy charcoal-grilled malai boti chicken chunks, white garlic cream sauce, onions, and loaded mozzarella."
+  },
+  {
+    "id": 3,
+    "name": "Super Supreme",
+    "category": "Special Flavours Pizza",
+    "category_id": 1,
+    "price": 880,
+    "description": "Fully loaded with chicken tikka, smoked sausages, black olives, fresh mushrooms, sweetcorn, and double cheese."
+  },
+  {
+    "id": 4,
+    "name": "Bonfire Pizza",
+    "category": "Special Flavours Pizza",
+    "category_id": 1,
+    "price": 880,
+    "description": "Smoky BBQ chicken chunks, sweet jalapenos, red onions, and hot signature bonfire BBQ drizzle."
+  },
+  {
+    "id": 5,
+    "name": "Chicken Tikka",
+    "category": "Traditional Flavours Pizza",
+    "category_id": 2,
+    "price": 850,
+    "description": "Traditional spiced chicken tikka cubes, red onions, bell peppers, and warm melted gold mozzarella."
+  },
+  {
+    "id": 6,
+    "name": "Chicken Fajita",
+    "category": "Traditional Flavours Pizza",
+    "category_id": 2,
+    "price": 850,
+    "description": "Mexican-style fajita chicken strips, sweet green bell peppers, onions, and rich mozzarella."
+  },
+  {
+    "id": 7,
+    "name": "Hot N Spicy",
+    "category": "Traditional Flavours Pizza",
+    "category_id": 2,
+    "price": 850,
+    "description": "Spicy peri-peri chicken chunks, fiery hot jalapenos, red onions, and hot chili drizzle."
+  },
+  {
+    "id": 8,
+    "name": "Cheese Lover",
+    "category": "Traditional Flavours Pizza",
+    "category_id": 2,
+    "price": 850,
+    "description": "Only cheese & sauce! Fresh herb tomato marinara smothered in a double thick layer of pure mozzarella."
+  },
+  {
+    "id": 9,
+    "name": "Veggie Lover",
+    "category": "Traditional Flavours Pizza",
+    "category_id": 2,
+    "price": 850,
+    "description": "Fresh garden bell peppers, onions, juicy mushrooms, black olives, sweetcorn, and mozzarella."
+  },
+  {
+    "id": 10,
+    "name": "Behari Kabab Pizza",
+    "category": "Stuff and Crown Pizza",
+    "category_id": 3,
+    "price": 1100,
+    "description": "Smoky tender behari kabab pieces layered over stuffed crust with rich BBQ notes and cheese."
+  },
+  {
+    "id": 11,
+    "name": "Kabab Stuffed Crust",
+    "category": "Stuff and Crown Pizza",
+    "category_id": 3,
+    "price": 1100,
+    "description": "Outer pizza crust stuffed with succulent spiced seekh kabab and topped with chicken chunks."
+  },
+  {
+    "id": 12,
+    "name": "Chicken & Cheese Stuffed Crust",
+    "category": "Stuff and Crown Pizza",
+    "category_id": 3,
+    "price": 1100,
+    "description": "Crust folded and stuffed with minced seasoned chicken and cheddar cheese string."
+  },
+  {
+    "id": 13,
+    "name": "Crown Crust Special",
+    "category": "Stuff and Crown Pizza",
+    "category_id": 3,
+    "price": 1100,
+    "description": "Majestic crown pizza design with royal cheese stuffed crown pockets and supreme toppings."
+  },
+  {
+    "id": 14,
+    "name": "Special Platter",
+    "category": "Special Platter",
+    "category_id": 4,
+    "price": 1199,
+    "description": "4 Pcs Spring roll, 6 Pcs oven Baked wing, Crispy Fries, Secret Dip sauce, and 500 ml Chilled Drink."
+  },
+  {
+    "id": 15,
+    "name": "Chicken Doner",
+    "category": "Doners",
+    "category_id": 5,
+    "price": 350,
+    "description": "Warm baked pita pocket loaded with shredded roasted chicken, crisp iceberg, and garlic mayo."
+  },
+  {
+    "id": 16,
+    "name": "Cheese Doner",
+    "category": "Doners",
+    "category_id": 5,
+    "price": 400,
+    "description": "Chicken doner layered with melted cheddar cheese slice, garlic sauce, and crisp greens."
+  },
+  {
+    "id": 17,
+    "name": "Kabab Doner",
+    "category": "Doners",
+    "category_id": 5,
+    "price": 420,
+    "description": "Juicy grilled kabab pieces tucked inside warm doner bread with spicy mint chutney and mayo."
+  },
+  {
+    "id": 18,
+    "name": "Malai Boti Doner",
+    "category": "Doners",
+    "category_id": 5,
+    "price": 380,
+    "description": "Creamy smoked malai boti chicken chunks wrapped in doner bread with velvety white sauce."
+  },
+  {
+    "id": 19,
+    "name": "BBQ Doner",
+    "category": "Doners",
+    "category_id": 5,
+    "price": 410,
+    "description": "Smoky BBQ glazed chicken doner with sauteed onions and tangy BBQ sauce."
+  },
+  {
+    "id": 20,
+    "name": "Oven Baked Wings (5 Pcs)",
+    "category": "Appetizers",
+    "category_id": 6,
+    "price": 300,
+    "description": "Five tender chicken wings marinated in herbs and slow baked in the oven."
+  },
+  {
+    "id": 21,
+    "name": "Oven Baked Wings (10 Pcs)",
+    "category": "Appetizers",
+    "category_id": 6,
+    "price": 600,
+    "description": "Ten pieces of juicy oven-baked wings served with special dipping sauce."
+  },
+  {
+    "id": 22,
+    "name": "Nuggets (5 Pcs)",
+    "category": "Appetizers",
+    "category_id": 6,
+    "price": 250,
+    "description": "Five golden, crispy battered chicken nuggets with garlic dip."
+  },
+  {
+    "id": 23,
+    "name": "Nuggets (10 Pcs)",
+    "category": "Appetizers",
+    "category_id": 6,
+    "price": 480,
+    "description": "Ten pieces of crispy chicken nuggets served hot with ketchup and mayo."
+  },
+  {
+    "id": 24,
+    "name": "Hot Wings (5 Pcs)",
+    "category": "Appetizers",
+    "category_id": 6,
+    "price": 300,
+    "description": "Five crispy fried hot chicken wings tossed in fiery chili seasoning."
+  },
+  {
+    "id": 25,
+    "name": "Hot Wings (10 Pcs)",
+    "category": "Appetizers",
+    "category_id": 6,
+    "price": 600,
+    "description": "Ten pieces of spicy, crunchy hot wings served with cooling dip."
+  },
+  {
+    "id": 26,
+    "name": "Spin Rolls (4 Pcs)",
+    "category": "Spin Rolls",
+    "category_id": 7,
+    "price": 550,
+    "description": "Four pieces of baked dough rolls packed with savory chicken and mozzarella."
+  },
+  {
+    "id": 27,
+    "name": "Behari Rolls (4 Pcs)",
+    "category": "Spin Rolls",
+    "category_id": 7,
+    "price": 580,
+    "description": "Four crispy spin rolls filled with smoky spiced behari chicken and onions."
+  },
+  {
+    "id": 28,
+    "name": "Mexican Rolls (4 Pcs)",
+    "category": "Spin Rolls",
+    "category_id": 7,
+    "price": 599,
+    "description": "Four zesty Mexican-spiced chicken rolls with salsa seasoning and cheese."
+  },
+  {
+    "id": 29,
+    "name": "Petty Burger",
+    "category": "Burgers",
+    "category_id": 8,
+    "price": 280,
+    "description": "Classic grilled chicken patty burger with fresh lettuce, onions, and mayo."
+  },
+  {
+    "id": 30,
+    "name": "Zinger Burger",
+    "category": "Burgers",
+    "category_id": 8,
+    "price": 350,
+    "description": "Signature crispy crunchy fried chicken fillet topped with creamy mayo and lettuce."
+  },
+  {
+    "id": 31,
+    "name": "Chapli Petty Burger",
+    "category": "Burgers",
+    "category_id": 8,
+    "price": 300,
+    "description": "Spiced authentic chapli chicken patty with mint chutney and fresh salad."
+  },
+  {
+    "id": 32,
+    "name": "Mayo Fries",
+    "category": "Fries",
+    "category_id": 9,
+    "price": 350,
+    "description": "Crisp golden french fries drizzled with creamy garlic mayonnaise."
+  },
+  {
+    "id": 33,
+    "name": "Cheesy Mayo Fries",
+    "category": "Fries",
+    "category_id": 9,
+    "price": 450,
+    "description": "Crispy french fries drenched in rich melted cheddar cheese sauce and garlic mayo."
+  },
+  {
+    "id": 34,
+    "name": "Loaded Fries",
+    "category": "Fries",
+    "category_id": 9,
+    "price": 650,
+    "description": "Fries fully loaded with crispy chicken chunks, jalapenos, cheese sauce, and mayo drizzle."
+  },
+  {
+    "id": 35,
+    "name": "Chicken Shawarma",
+    "category": "Shawarma and Paratha Roll",
+    "category_id": 10,
+    "price": 220,
+    "description": "Shredded seasoned chicken wrapped in warm pita bread with garlic mayo and pickles."
+  },
+  {
+    "id": 36,
+    "name": "Zinger Shawarma",
+    "category": "Shawarma and Paratha Roll",
+    "category_id": 10,
+    "price": 290,
+    "description": "Crispy fried zinger strips wrapped in soft pita with spicy chili garlic dressing."
+  },
+  {
+    "id": 37,
+    "name": "Chicken Paratha",
+    "category": "Shawarma and Paratha Roll",
+    "category_id": 10,
+    "price": 290,
+    "description": "Spiced shredded chicken rolled in a hot, flaky lachha paratha."
+  },
+  {
+    "id": 38,
+    "name": "Zinger Paratha",
+    "category": "Shawarma and Paratha Roll",
+    "category_id": 10,
+    "price": 370,
+    "description": "Crispy zinger fillet wrapped inside a buttery, crisp paratha with secret sauce."
+  },
+  {
+    "id": 39,
+    "name": "Creamy Pasta",
+    "category": "Pasta",
+    "category_id": 11,
+    "price": 400,
+    "description": "Penne pasta tossed in velvety garlic white cream sauce, chicken chunks, and Italian herbs."
+  },
+  {
+    "id": 40,
+    "name": "Crunchy Pasta",
+    "category": "Pasta",
+    "category_id": 11,
+    "price": 450,
+    "description": "Creamy baked penne pasta topped with crispy crunchy zinger bites and bubbling mozzarella."
+  },
+  {
+    "id": 41,
+    "name": "Maxican Sandwich",
+    "category": "Sandwiches",
+    "category_id": 12,
+    "price": 550,
+    "description": "Toasted multi-layer sandwich loaded with Mexican fajita chicken, cheese, and spicy salsa dressing."
+  },
+  {
+    "id": 42,
+    "name": "Malai Boti Sandwich",
+    "category": "Sandwiches",
+    "category_id": 12,
+    "price": 580,
+    "description": "Smoky, velvety malai boti chicken filling inside toasted bread with garlic mayonnaise."
+  },
+  {
+    "id": 43,
+    "name": "Hot / Spicy Sandwich",
+    "category": "Sandwiches",
+    "category_id": 12,
+    "price": 580,
+    "description": "Spicy grilled chicken sandwich with jalapenos, spicy dressing, and golden fries."
+  },
+  {
+    "id": 44,
+    "name": "Soft Drink 300ML",
+    "category": "Beverages",
+    "category_id": 13,
+    "price": 80,
+    "description": "Chilled 300ml carbonated soft drink (Pepsi / Coke / 7Up / Sprite / Dew)."
+  },
+  {
+    "id": 45,
+    "name": "Soft Drink 500ML",
+    "category": "Beverages",
+    "category_id": 13,
+    "price": 110,
+    "description": "Chilled 500ml beverage bottle."
+  },
+  {
+    "id": 46,
+    "name": "Soft Drink 1 Ltr",
+    "category": "Beverages",
+    "category_id": 13,
+    "price": 150,
+    "description": "Chilled 1 Litre soft drink bottle."
+  },
+  {
+    "id": 47,
+    "name": "Soft Drink 1.5 Ltr",
+    "category": "Beverages",
+    "category_id": 13,
+    "price": 190,
+    "description": "Chilled 1.5 Litre family soft drink bottle."
+  },
+  {
+    "id": 48,
+    "name": "Water Small",
+    "category": "Beverages",
+    "category_id": 13,
+    "price": 60,
+    "description": "Pure 500ml bottled mineral drinking water."
+  },
+  {
+    "id": 49,
+    "name": "Water Large",
+    "category": "Beverages",
+    "category_id": 13,
+    "price": 120,
+    "description": "Pure 1.5L bottled mineral drinking water."
+  },
+  {
+    "id": 50,
+    "name": "Extra Topping Chkn/Cheese",
+    "category": "Adds On",
+    "category_id": 14,
+    "price": 100,
+    "description": "Additional topping of spiced chicken or melted mozzarella cheese."
+  },
+  {
+    "id": 51,
+    "name": "Garlic Sauce",
+    "category": "Adds On",
+    "category_id": 14,
+    "price": 70,
+    "description": "Extra tub of creamy garlic mayo sauce."
+  },
+  {
+    "id": 52,
+    "name": "Dip Sauce",
+    "category": "Adds On",
+    "category_id": 14,
+    "price": 70,
+    "description": "Extra tub of signature dipping sauce."
+  },
+  {
+    "id": 53,
+    "name": "Cheese Slice",
+    "category": "Adds On",
+    "category_id": 14,
+    "price": 70,
+    "description": "Extra melted cheddar cheese slice."
+  },
+  {
+    "id": 54,
+    "name": "Deal no 1",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 800,
+    "description": "Small Pizza, 5 Nuggets, 300ml Drink"
+  },
+  {
+    "id": 55,
+    "name": "Deal no 2",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 850,
+    "description": "Small Pizza, 5 Wings, 300ml Drink"
+  },
+  {
+    "id": 56,
+    "name": "Deal no 3",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 1270,
+    "description": "Small Pizza, 2 Zngr Burger, 500ml Drink"
+  },
+  {
+    "id": 57,
+    "name": "Deal no 4",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 990,
+    "description": "Small Pizza, Creamy Pasta-H, 500ml Drink"
+  },
+  {
+    "id": 58,
+    "name": "Deal no 5",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 1270,
+    "description": "Small Pizza, 2 Doner, 500ml Drink"
+  },
+  {
+    "id": 59,
+    "name": "Deal no 6",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 1550,
+    "description": "Medium Pizza, 10 Hot Wings, 1-Ltr Drink"
+  },
+  {
+    "id": 60,
+    "name": "Deal no 7",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 1470,
+    "description": "Medium Pizza, 10 Nuggets, 1-Ltr Drink"
+  },
+  {
+    "id": 61,
+    "name": "Deal no 8",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 1370,
+    "description": "Medium Pizza, Creamy Pasta-H, 1-Ltr Drink"
+  },
+  {
+    "id": 62,
+    "name": "Deal no 9",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 1990,
+    "description": "Medium Pizza, 3 Zngr Burger, 1-Ltr Drink"
+  },
+  {
+    "id": 63,
+    "name": "Deal no 10",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 1520,
+    "description": "Medium Pizza, 4-Pcs Spin Roll, 1-Ltr Drink"
+  },
+  {
+    "id": 64,
+    "name": "Deal no 11",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 2050,
+    "description": "Large Pizza, 10 Hot Wings, 1.5 Ltr Drink"
+  },
+  {
+    "id": 65,
+    "name": "Deal no 12",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 1950,
+    "description": "Large Pizza, 10 Nuggets, 1.5 Ltr Drink"
+  },
+  {
+    "id": 66,
+    "name": "Deal no 13",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 2050,
+    "description": "Large Pizza, Creamy Pasta, 1.5 Ltr Drink"
+  },
+  {
+    "id": 67,
+    "name": "Deal no 14",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 2799,
+    "description": "Large Pizza, 4 Zngr Burger, 1.5 Ltr Drink"
+  },
+  {
+    "id": 68,
+    "name": "Deal no 15",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 2250,
+    "description": "Large Pizza, 6-Pcs Spin Roll, 1.5 Ltr Drink"
+  },
+  {
+    "id": 69,
+    "name": "Deal no 16",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 1140,
+    "description": "2 Small Pizza, 1 Ltr Drink"
+  },
+  {
+    "id": 70,
+    "name": "Deal no 17",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 1800,
+    "description": "2 Medium Pizza, 1 Ltr Drink"
+  },
+  {
+    "id": 71,
+    "name": "Deal no 18",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 2750,
+    "description": "2 Large Pizza, 1.5 Ltr Drink"
+  },
+  {
+    "id": 72,
+    "name": "Deal no 19",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 1330,
+    "description": "20 Pcs Wings, 1.5 Ltr Drink"
+  },
+  {
+    "id": 73,
+    "name": "Deal no 20",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 1850,
+    "description": "5 Zngr Burger, 1.5 Ltr Drink"
+  },
+  {
+    "id": 74,
+    "name": "Deal no 21",
+    "category": "Pizza Buster Deals",
+    "category_id": 15,
+    "price": 3500,
+    "description": "10 Zngr Burger, 1.5 Ltr Drink"
+  },
+  {
+    "id": 75,
+    "name": "Deal no 22",
+    "category": "Doner Deals",
+    "category_id": 16,
+    "price": 570,
+    "description": "1-Chiken Doner, Fries, 0.5 Ltr Drink"
+  },
+  {
+    "id": 76,
+    "name": "Deal no 23",
+    "category": "Doner Deals",
+    "category_id": 16,
+    "price": 880,
+    "description": "2-Chiken Doner, Fries, 0.5 Ltr Drink"
+  },
+  {
+    "id": 77,
+    "name": "Deal no 24",
+    "category": "Doner Deals",
+    "category_id": 16,
+    "price": 1320,
+    "description": "3-Chiken Doner, Fries, 1 Ltr Drink"
+  },
+  {
+    "id": 78,
+    "name": "Deal no 25",
+    "category": "Doner Deals",
+    "category_id": 16,
+    "price": 1520,
+    "description": "4-Chiken Doner, Fries, 1.5 Ltr Drink"
+  },
+  {
+    "id": 79,
+    "name": "Deal no 26",
+    "category": "Doner Deals",
+    "category_id": 16,
+    "price": 870,
+    "description": "2-Cheese Doner, Fries, 0.5 Ltr Drink"
+  },
+  {
+    "id": 80,
+    "name": "Deal no 27",
+    "category": "Doner Deals",
+    "category_id": 16,
+    "price": 1680,
+    "description": "4-Cheese Doner, Fries, 1 Ltr Drink"
+  },
+  {
+    "id": 81,
+    "name": "Deal no 28",
+    "category": "Doner Deals",
+    "category_id": 16,
+    "price": 1680,
+    "description": "2-Malai Doner, 2- BBQ Doner, 1.5 Ltr Drink"
+  },
+  {
+    "id": 82,
+    "name": "Deal no 29",
+    "category": "Doner Deals",
+    "category_id": 16,
+    "price": 1680,
+    "description": "2-Cheese Doner, 2- Malai Doner, 1.5 Ltr Drink"
+  },
+  {
+    "id": 83,
+    "name": "Deal no 30",
+    "category": "Doner Deals",
+    "category_id": 16,
+    "price": 2650,
+    "description": "6 Doner Any, 1.5 Ltr Drink"
+  },
+  {
+    "id": 84,
+    "name": "Deal no 31",
+    "category": "Doner Deals",
+    "category_id": 16,
+    "price": 3480,
+    "description": "8 Doner Any, 1.5 Ltr Drink"
+  },
+  {
+    "id": 85,
+    "name": "Deal no 32",
+    "category": "Doner Deals",
+    "category_id": 16,
+    "price": 4380,
+    "description": "10 Doner Any, 2-1.5 Ltr Drink"
+  },
+  {
+    "id": 86,
+    "name": "Deal no 33",
+    "category": "Doner Deals",
+    "category_id": 16,
+    "price": 5220,
+    "description": "12 Doner Any, 2-1.5 Ltr Drink"
+  },
+  {
+    "id": 87,
+    "name": "Birthday Deal 1",
+    "category": "Birthday Deals",
+    "category_id": 17,
+    "price": 3350,
+    "description": "Large Pizza, 10 Pcs Wings, 2 Zngr Burger, Large Fries, 2x 1.5 Ltr Drinks, and 1 Pound Birthday Cake!"
+  },
+  {
+    "id": 88,
+    "name": "Birthday Deal 2",
+    "category": "Birthday Deals",
+    "category_id": 17,
+    "price": 4450,
+    "description": "Large Pizza, Medium Pizza, 10 Pcs Wings, 2 Zngr Burger, Family Fries, 2x 1.5 Ltr Drinks, and 1 Pound Birthday Cake!"
+  }
+];
+
+        // Cache-first catalog loader
+        let categories = JSON.parse(localStorage.getItem('nfc_cached_categories') || 'null') || DEFAULT_CATEGORIES;
+        let menuCatalog = JSON.parse(localStorage.getItem('nfc_cached_menu_items') || 'null') || DEFAULT_MENU_ITEMS;
 
         let currentCategory = 'all';
         let currentOrderType = 'dine_in';
@@ -465,20 +1286,47 @@
         let cart = [];
         let openingFloat = parseFloat(localStorage.getItem('nfc_opening_float') || '5000');
 
-        // Render Menu
+        // Render Category Tabs
+        function renderCategoryTabs() {
+            const tabsContainer = document.getElementById('category-tabs');
+            tabsContainer.innerHTML = '';
+
+            // 'ALL' Tab
+            const allTab = document.createElement('div');
+            allTab.className = 'category-tab' + (currentCategory === 'all' ? ' active' : '');
+            allTab.innerHTML = `<span>✨ ALL MENU</span> <span class="tab-badge">${menuCatalog.length}</span>`;
+            allTab.onclick = () => selectCategory('all', allTab);
+            tabsContainer.appendChild(allTab);
+
+            categories.forEach(cat => {
+                const catName = typeof cat === 'string' ? cat : cat.name;
+                const catIcon = cat.icon || '🍽️';
+                const count = menuCatalog.filter(i => i.category === catName || i.category_id == cat.id).length;
+                
+                const tab = document.createElement('div');
+                tab.className = 'category-tab' + (currentCategory === catName ? ' active' : '');
+                tab.innerHTML = `<span>${catIcon} ${catName.toUpperCase()}</span> <span class="tab-badge">${count}</span>`;
+                tab.onclick = () => selectCategory(catName, tab);
+                tabsContainer.appendChild(tab);
+            });
+        }
+
+        // Render Menu Items
         function renderMenu() {
             const grid = document.getElementById('menu-grid');
-            const search = document.getElementById('menu-search').value.toLowerCase();
+            const search = (document.getElementById('menu-search').value || '').toLowerCase().trim();
             grid.innerHTML = '';
 
-            const filtered = MENU_CATALOG.filter(item => {
+            const filtered = menuCatalog.filter(item => {
                 const matchCat = (currentCategory === 'all' || item.category === currentCategory);
-                const matchSearch = item.name.toLowerCase().includes(search) || item.category.toLowerCase().includes(search);
+                const matchSearch = item.name.toLowerCase().includes(search) || 
+                                    (item.category && item.category.toLowerCase().includes(search)) ||
+                                    (item.description && item.description.toLowerCase().includes(search));
                 return matchCat && matchSearch;
             });
 
             if (filtered.length === 0) {
-                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 30px;">No matching items found.</div>';
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 40px; font-size: 13px;">No matching dishes found in this category.</div>';
                 return;
             }
 
@@ -487,12 +1335,13 @@
                 card.className = 'item-card';
                 card.onclick = () => addToCart(item);
                 card.innerHTML = `
-                    <div>
+                    <div class="item-card-header">
                         <div class="item-card-cat">${item.category}</div>
                         <div class="item-card-title">${item.name}</div>
+                        ${item.description ? `<div class="item-card-desc">${item.description}</div>` : ''}
                     </div>
                     <div class="item-card-footer">
-                        <span class="item-card-price">Rs ${item.price.toLocaleString()}</span>
+                        <span class="item-card-price">Rs ${Number(item.price).toLocaleString()}</span>
                         <span class="item-add-badge">+</span>
                     </div>
                 `;
@@ -534,7 +1383,7 @@
             }
         }
 
-        // Cart Management
+        // Cart Operations
         function addToCart(item) {
             const existing = cart.find(c => c.id === item.id);
             if (existing) {
@@ -543,8 +1392,7 @@
                 cart.push({
                     id: item.id,
                     name: item.name,
-                    price: item.price,
-                    portion: 'Regular',
+                    price: Number(item.price),
                     quantity: 1
                 });
             }
@@ -572,7 +1420,7 @@
         function renderCart() {
             const list = document.getElementById('cart-list');
             if (cart.length === 0) {
-                list.innerHTML = `<div style="text-align: center; color: #64748b; font-size: 11px; margin-top: 40px;">Cart is empty.<br>Tap items on the left to add.</div>`;
+                list.innerHTML = `<div style="text-align: center; color: #64748b; font-size: 11.5px; margin-top: 50px;">Cart is empty.<br>Tap items on the left to add.</div>`;
                 updateSummary(0);
                 return;
             }
@@ -605,7 +1453,7 @@
         }
 
         function updateSummary(subtotal) {
-            const tax = Math.round(subtotal * 0.05);
+            const tax = 0; // GST 0%
             const total = subtotal + tax;
 
             document.getElementById('lbl-subtotal').innerText = `Rs ${subtotal.toLocaleString()}`;
@@ -615,12 +1463,12 @@
 
         function getCartTotals() {
             let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            let tax = Math.round(subtotal * 0.05);
+            let tax = 0;
             let total = subtotal + tax;
             return { subtotal, tax, total };
         }
 
-        // Payment Modal & Cash Calculation
+        // Payment & Change Calculation
         function openPaymentModal() {
             if (cart.length === 0) {
                 alert("Please add items to cart before proceeding to checkout.");
@@ -695,17 +1543,19 @@
             document.getElementById('till-btn-text').innerText = `TILL OPEN: Rs ${expectedCash.toLocaleString()}`;
         }
 
-        // Checkout & Printing
+        // Checkout & 80mm Receipt Printing
         function confirmPaymentAndPrint() {
             const { subtotal, tax, total } = getCartTotals();
             const tendered = parseFloat(document.getElementById('tendered-amount').value) || total;
             const change = Math.max(0, tendered - total);
             
             let table = document.getElementById('table-select').value;
+            let custName = 'Walk-In Guest';
             let custPhone = '';
             let custAddress = '';
 
             if (currentOrderType === 'delivery') {
+                custName = document.getElementById('deliv-name').value || 'Delivery Customer';
                 custPhone = document.getElementById('deliv-phone').value;
                 custAddress = document.getElementById('deliv-address').value;
                 table = 'Delivery: ' + (custAddress || 'Address on file');
@@ -724,7 +1574,7 @@
                 order_number: orderNo,
                 terminal_code: 'POS-OFFLINE',
                 table_number: table,
-                customer_name: 'Walk-In Guest',
+                customer_name: custName,
                 customer_phone: custPhone,
                 customer_address: custAddress,
                 subtotal: subtotal,
@@ -790,18 +1640,19 @@
         // Bidirectional Cloud Synchronization Engine
         const SYNC_SERVER_URL = 'https://nawabifoodcorner.com';
 
-        async function syncOfflineOrders() {
+        async function syncOfflineOrders(silent = false) {
             const badgeText = document.getElementById('sync-status-text');
             badgeText.innerText = 'SYNCING...';
 
             const orders = JSON.parse(localStorage.getItem('nfc_offline_orders') || '[]');
 
             try {
-                // 1. Health ping
+                // 1. Health check ping
                 const ping = await fetch(`${SYNC_SERVER_URL}/api/pos/sync/health`, { method: 'GET' });
                 if (!ping.ok) throw new Error("Offline");
 
-                // 2. Push offline orders if any
+                // 2. Push offline orders if any exist
+                let pushMsg = '';
                 if (orders.length > 0) {
                     const pushResp = await fetch(`${SYNC_SERVER_URL}/api/pos/sync/push`, {
                         method: 'POST',
@@ -811,17 +1662,51 @@
                     const pushData = await pushResp.json();
                     if (pushData.status === 'success') {
                         localStorage.setItem('nfc_offline_orders', '[]');
-                        alert(`✅ Cloud Sync Success: ${pushData.synced_count} offline orders pushed to Nawabi Hub!`);
+                        pushMsg = `Pushed ${pushData.synced_count} offline orders to Cloud Hub!`;
                     }
-                } else {
-                    alert('✅ Connected to Cloud Hub. No pending offline orders.');
+                }
+
+                // 3. Pull latest menu items & categories delta from server
+                const pullResp = await fetch(`${SYNC_SERVER_URL}/api/pos/sync/pull`, { method: 'GET' });
+                if (pullResp.ok) {
+                    const pullData = await pullResp.json();
+                    if (pullData.categories && pullData.categories.length > 0) {
+                        categories = pullData.categories.map(c => ({
+                            id: c.id,
+                            name: c.name,
+                            slug: c.slug,
+                            icon: cat_icons[c.name] || '🍽️'
+                        }));
+                        localStorage.setItem('nfc_cached_categories', JSON.stringify(categories));
+                    }
+                    if (pullData.menu_items && pullData.menu_items.length > 0) {
+                        menuCatalog = pullData.menu_items.map(it => {
+                            const catObj = categories.find(c => c.id == it.category_id);
+                            return {
+                                id: it.id,
+                                name: it.name,
+                                category: catObj ? catObj.name : (it.category || 'General'),
+                                category_id: it.category_id,
+                                price: parseFloat(it.price) || 0,
+                                description: it.description || ''
+                            };
+                        });
+                        localStorage.setItem('nfc_cached_menu_items', JSON.stringify(menuCatalog));
+                    }
+                    renderCategoryTabs();
+                    renderMenu();
                 }
 
                 updateSyncBadge(true);
+                if (!silent) {
+                    alert(`✅ Cloud Sync Success! ${pushMsg ? pushMsg + ' ' : ''}Menu updated to live server state (${menuCatalog.length} dishes, ${categories.length} categories).`);
+                }
             } catch (err) {
                 console.warn("[Kiosk Sync] Server unreachable or device offline:", err);
                 updateSyncBadge(false);
-                alert(`⚠️ Cloud server offline or network unavailable. All orders are safely stored locally on this machine.`);
+                if (!silent) {
+                    alert(`⚠️ Cloud server offline or network unavailable. All operations and orders are running 100% locally on this computer.`);
+                }
             }
         }
 
@@ -840,20 +1725,29 @@
             }
         }
 
-        // Network event listeners
-        window.addEventListener('online', () => updateSyncBadge(true));
+        // Network listeners
+        window.addEventListener('online', () => {
+            updateSyncBadge(true);
+            syncOfflineOrders(true);
+        });
         window.addEventListener('offline', () => updateSyncBadge(false));
 
-        // Initialize on load
+        // Boot
         document.addEventListener('DOMContentLoaded', () => {
+            renderCategoryTabs();
             renderMenu();
             updateSyncBadge();
             updateTillButton();
-            // Periodic background sync attempt
+
+            // Silently attempt background sync if online
+            if (navigator.onLine) {
+                syncOfflineOrders(true);
+            }
+
+            // Periodic sync check every 30 seconds
             setInterval(() => {
                 if (navigator.onLine) {
-                    const pending = JSON.parse(localStorage.getItem('nfc_offline_orders') || '[]').length;
-                    if (pending > 0) syncOfflineOrders();
+                    syncOfflineOrders(true);
                 }
             }, 30000);
         });

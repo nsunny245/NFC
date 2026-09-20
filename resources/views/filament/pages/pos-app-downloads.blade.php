@@ -544,8 +544,8 @@
                     <!-- 3-Step Guide -->
                     <div class="nfc-setup-box">
                         <div style="font-weight: 800; margin-bottom: 0.25rem;">Easy Setup (2 Steps):</div>
-                        <div>1. Download <b>Windows POS Suite (.zip)</b> below.</div>
-                        <div>2. Extract & double-click <b>Launch-POS-Terminal.bat</b> or run <b>Install-Desktop-Shortcut.bat</b>.</div>
+                        <div>1. Download <b>Windows POS Suite (.zip)</b> below and extract.</div>
+                        <div>2. Double-click <b>1-Click-Offline-POS-Station.bat</b> or <b>Nawabi-Food-Corner-POS.html</b> to start billing!</div>
                     </div>
                 </div>
 
@@ -607,9 +607,10 @@
 
                     <!-- 3-Step Guide -->
                     <div class="nfc-setup-box">
-                        <div style="font-weight: 800; margin-bottom: 0.25rem;">Easy Setup (2 Steps):</div>
-                        <div>1. Download <b>macOS POS Suite (.zip)</b> below.</div>
-                        <div>2. Extract & double-click <b>Launch-POS-Mac.command</b>.</div>
+                        <div style="font-weight: 800; margin-bottom: 0.25rem;">Instant 1-Click Launch (Zero Gatekeeper Blocks):</div>
+                        <div>1. Download <b>macOS POS Suite (.zip)</b> below and unzip.</div>
+                        <div>2. Double-click <b>Nawabi-Food-Corner-POS.html</b> (Opens instantly in Safari/Chrome).</div>
+                        <div><i>Optional:</i> Right-click <b>Launch-POS-Mac.command</b> &rarr; Open for dedicated app window.</div>
                     </div>
                 </div>
 

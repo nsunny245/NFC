@@ -1964,6 +1964,24 @@
 
     <div class="pos-terminal-wrapper">
 
+        <!-- Offline Network Warning Banner -->
+        <div x-data="{ isOffline: !navigator.onLine }" 
+             x-init="
+                window.addEventListener('offline', () => isOffline = true);
+                window.addEventListener('online', () => isOffline = false);
+             "
+             x-show="isOffline"
+             x-cloak
+             style="background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%); color: #ffffff; padding: 8px 16px; border-radius: 12px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; font-size: 11.5px; font-weight: 800; border: 1.5px solid #f87171; box-shadow: 0 4px 12px rgba(185, 28, 28, 0.4); z-index: 9999;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 16px;">⚠️</span>
+                <span>INTERNET DISCONNECTED: The online cloud portal requires active network. For 100% uninterrupted offline cashier billing, switch to the Standalone Offline POS Station!</span>
+            </div>
+            <a href="/downloads/Nawabi-Food-Corner-POS.html" target="_blank" style="background: #ffffff; color: #991b1b; padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 900; text-decoration: none; white-space: nowrap;">
+                ⚡ OPEN OFFLINE STATION
+            </a>
+        </div>
+
         <!-- ========================================================================= -->
         <!-- TOP APPBAR: Cashier Brand + Live Clock + Shift Status + Actions           -->
         <!-- ========================================================================= -->
