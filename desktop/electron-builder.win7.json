@@ -1,0 +1,24 @@
+{
+  "appId": "com.nawabifoodcorner.pos.legacy",
+  "productName": "Nawabi Food Corner POS Legacy",
+  "electronVersion": "22.3.27",
+  "copyright": "Copyright © 2026 Nawabi Food Corner",
+  "directories": { "output": "dist-win7" },
+  "files": ["main.js", "preload.js", "package.json"],
+  "extraResources": [{
+    "from": "../public/downloads/pos-offline-kiosk.html",
+    "to": "offline/pos-offline-kiosk.html"
+  }],
+  "win": {
+    "target": ["nsis"],
+    "icon": "../public/downloads/logo.ico",
+    "artifactName": "Nawabi-Food-Corner-POS-Windows-7-8-${version}-${arch}.${ext}"
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "Nawabi Food Corner POS Legacy"
+  }
+}

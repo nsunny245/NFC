@@ -23,6 +23,10 @@
 /desktop/node_modules
 /vendor.zip
 /public/downloads/*.dmg
+/public/downloads/Nawabi-Food-Corner-POS-Windows-10-11-x64-*.exe
+/public/downloads/Nawabi-Food-Corner-POS-Windows-7-8-Setup.exe
+/desktop/dist/
+/desktop/dist-win7/
 Homestead.json
 Homestead.yaml
 Thumbs.db

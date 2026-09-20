@@ -43,8 +43,10 @@ class PosAppDownloads extends Page
             ->toArray();
 
         $downloadsDir = public_path('downloads');
-        $this->windowsExeReady = File::exists($downloadsDir . '/Nawabi-Food-Corner-POS-Setup.exe');
-        $this->macDmgReady = File::exists($downloadsDir . '/Nawabi-Food-Corner-POS.dmg');
+        $this->windowsExeReady = File::exists($downloadsDir . '/Nawabi-Food-Corner-POS-Windows-10-11-x64-Setup.exe')
+            && File::exists($downloadsDir . '/Nawabi-Food-Corner-POS-Windows-7-8-Setup.exe');
+        $this->macDmgReady = File::exists($downloadsDir . '/Nawabi-Food-Corner-POS-macOS-Intel.dmg')
+            && File::exists($downloadsDir . '/Nawabi-Food-Corner-POS-macOS-Apple-Silicon.dmg');
         $this->windowsZipReady = File::exists($downloadsDir . '/Nawabi-Food-Corner-POS-Windows.zip');
     }
 

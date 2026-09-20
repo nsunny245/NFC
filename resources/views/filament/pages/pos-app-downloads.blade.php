@@ -518,14 +518,14 @@
                     <!-- Title & Subtitle -->
                     <div>
                         <h3 class="nfc-app-title">Windows POS Terminal</h3>
-                        <p class="nfc-app-sub">Universal Build for Windows 7 (32/64-bit), 8, 10 & 11</p>
+                        <p class="nfc-app-sub">Separate supported builds for modern and legacy Windows</p>
                     </div>
 
                     <!-- Feature Checklist -->
                     <ul class="nfc-checklist">
                         <li class="nfc-check-item">
                             <span class="nfc-check-bullet">✓</span>
-                            <span><b>Universal Compatibility:</b> Runs on Windows 7, 8, 10 & 11 (32-bit & 64-bit)</span>
+                            <span><b>Windows 10/11:</b> Current x64 desktop runtime</span>
                         </li>
                         <li class="nfc-check-item">
                             <span class="nfc-check-bullet">✓</span>
@@ -533,7 +533,7 @@
                         </li>
                         <li class="nfc-check-item">
                             <span class="nfc-check-bullet">✓</span>
-                            <span>Ultra-lightweight (< 1 MB) - Runs fast on 2GB/4GB RAM cash counter PCs</span>
+                            <span><b>Windows 7 SP1/8/8.1:</b> Electron 22 x86/x64 legacy installer</span>
                         </li>
                         <li class="nfc-check-item">
                             <span class="nfc-check-bullet">✓</span>
@@ -543,23 +543,24 @@
 
                     <!-- 3-Step Guide -->
                     <div class="nfc-setup-box">
-                        <div style="font-weight: 800; margin-bottom: 0.25rem;">Easy Setup (2 Steps):</div>
-                        <div>1. Download <b>Windows POS Suite (.zip)</b> below and extract.</div>
-                        <div>2. Double-click <b>1-Click-Offline-POS-Station.bat</b> or <b>Nawabi-Food-Corner-POS.html</b> to start billing!</div>
+                        <div style="font-weight: 800; margin-bottom: 0.25rem;">Setup</div>
+                        <div>1. Choose the installer matching the Windows version.</div>
+                        <div>2. Open <b>Settings</b> and paste this terminal's sync token.</div>
+                        <div style="margin-top:4px;"><b>Note:</b> Windows 7 is end-of-life; keep legacy terminals isolated and maintained.</div>
                     </div>
                 </div>
 
                 <!-- Footer Action Buttons -->
                 <div class="nfc-app-card-footer">
-                    <a href="{{ route('pos.app.download', ['platform' => 'windows']) }}" class="nfc-btn-win">
+                    <a href="{{ route('pos.app.download', ['platform' => 'windows-modern']) }}" class="nfc-btn-win">
                         <svg style="width: 1.15rem; height: 1.15rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
-                        <span>Download Windows App (.exe) / Suite (.zip)</span>
+                        <span>Download Windows App (.exe) — Windows 10/11 x64</span>
                     </a>
 
-                    <a href="{{ route('pos.app.download', ['platform' => 'kiosk']) }}" class="nfc-btn-secondary">
-                        <span>⚡ Direct Standalone Kiosk (.html)</span>
+                    <a href="{{ route('pos.app.download', ['platform' => 'windows-legacy']) }}" class="nfc-btn-secondary">
+                        <span>Windows 7 SP1 / 8 / 8.1 Legacy (x86 + x64)</span>
                     </a>
                 </div>
             </div>
@@ -575,7 +576,7 @@
                             </svg>
                         </div>
                         <span style="padding: 4px 10px; border-radius: 9999px; background: rgba(124, 58, 237, 0.15); border: 1px solid rgba(124, 58, 237, 0.35); color: #7c3aed; font-size: 0.675rem; font-weight: 900; text-transform: uppercase;">
-                            Universal Build
+                            Two Native Builds
                         </span>
                     </div>
 
@@ -589,7 +590,7 @@
                     <ul class="nfc-checklist">
                         <li class="nfc-check-item">
                             <span class="nfc-check-bullet">✓</span>
-                            <span>Apple Silicon (M1/M2/M3/M4) & Intel native</span>
+                            <span>Apple Silicon (M1 and newer) native arm64 build</span>
                         </li>
                         <li class="nfc-check-item">
                             <span class="nfc-check-bullet">✓</span>
@@ -597,7 +598,7 @@
                         </li>
                         <li class="nfc-check-item">
                             <span class="nfc-check-bullet">✓</span>
-                            <span>Zero-configuration thermal printer support</span>
+                            <span>Separate native Intel x64 build</span>
                         </li>
                         <li class="nfc-check-item">
                             <span class="nfc-check-bullet">✓</span>
@@ -607,24 +608,24 @@
 
                     <!-- 3-Step Guide -->
                     <div class="nfc-setup-box">
-                        <div style="font-weight: 800; margin-bottom: 0.25rem;">Instant 1-Click Launch (Zero Gatekeeper Blocks):</div>
-                        <div>1. Download <b>macOS POS Suite (.zip)</b> below and unzip.</div>
-                        <div>2. Double-click <b>Nawabi-Food-Corner-POS.html</b> (Opens instantly in Safari/Chrome).</div>
-                        <div><i>Optional:</i> Right-click <b>Launch-POS-Mac.command</b> &rarr; Open for dedicated app window.</div>
+                        <div style="font-weight: 800; margin-bottom: 0.25rem;">Setup</div>
+                        <div>1. Choose Apple Silicon or Intel and open the DMG.</div>
+                        <div>2. Drag the app to Applications and configure the terminal token.</div>
+                        <div><b>QA builds are unsigned:</b> public deployment needs Developer ID signing and notarization.</div>
                     </div>
                 </div>
 
                 <!-- Footer Action Buttons -->
                 <div class="nfc-app-card-footer">
-                    <a href="{{ route('pos.app.download', ['platform' => 'mac']) }}" class="nfc-btn-mac">
+                    <a href="{{ route('pos.app.download', ['platform' => 'mac-arm64']) }}" class="nfc-btn-mac">
                         <svg style="width: 1.15rem; height: 1.15rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
-                        <span>Download macOS App (.dmg) / Suite (.zip)</span>
+                        <span>Download macOS App (.dmg) — Apple Silicon</span>
                     </a>
 
-                    <a href="{{ route('pos.app.download', ['platform' => 'kiosk']) }}" class="nfc-btn-secondary">
-                        <span>⚡ Direct Standalone Kiosk (.html)</span>
+                    <a href="{{ route('pos.app.download', ['platform' => 'mac-intel']) }}" class="nfc-btn-secondary">
+                        <span>Download macOS Intel (.dmg)</span>
                     </a>
                 </div>
             </div>

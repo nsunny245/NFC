@@ -1,12 +1,15 @@
 {
   "name": "nawabi-food-corner-pos",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Nawabi Food Corner POS - Standalone Offline-First Desktop Terminal",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build:win": "electron-builder --win nsis:ia32,x64",
-    "build:mac": "electron-builder --mac dmg,zip",
+    "build:win": "electron-builder --win nsis --x64",
+    "build:win:portable": "electron-builder --win portable --x64 --config.win.artifactName='Nawabi-Food-Corner-POS-Portable-${version}-${arch}.${ext}'",
+    "build:win7": "electron-builder --config electron-builder.win7.json --win nsis --ia32 --x64",
+    "build:win7:portable": "electron-builder --config electron-builder.win7.json --win portable --ia32 --x64 --config.win.artifactName='Nawabi-Food-Corner-POS-Windows-7-8-Portable-${version}-${arch}.${ext}'",
+    "build:mac": "electron-builder --mac dmg zip --x64 --arm64",
     "build:all": "electron-builder -mw"
   },
   "keywords": [
@@ -19,13 +22,10 @@
   "author": "Nawabi Food Corner",
   "license": "Proprietary",
   "devDependencies": {
-    "electron": "^44.3.0",
+    "electron": "44.3.0",
     "electron-builder": "^24.13.3"
   },
-  "dependencies": {
-    "axios": "^1.7.2",
-    "better-sqlite3": "^9.6.0"
-  },
+  "dependencies": {},
   "build": {
     "appId": "com.nawabifoodcorner.pos",
     "productName": "Nawabi Food Corner POS",
@@ -33,12 +33,17 @@
     "directories": {
       "output": "dist"
     },
+    "files": ["main.js", "preload.js", "package.json"],
+    "extraResources": [{
+      "from": "../public/downloads/pos-offline-kiosk.html",
+      "to": "offline/pos-offline-kiosk.html"
+    }],
     "win": {
       "target": [
-        "nsis",
-        "portable"
+        "nsis"
       ],
-      "icon": "../public/images/logo_circular.png"
+      "icon": "../public/downloads/logo.ico",
+      "artifactName": "Nawabi-Food-Corner-POS-${version}-${arch}.${ext}"
     },
     "nsis": {
       "oneClick": false,
@@ -53,7 +58,8 @@
         "zip"
       ],
       "icon": "../public/images/logo_circular.png",
-      "category": "public.app-category.business"
+      "category": "public.app-category.business",
+      "artifactName": "Nawabi-Food-Corner-POS-${version}-${arch}.${ext}"
     }
   }
 }

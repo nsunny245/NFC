@@ -1,56 +1,36 @@
-# Nawabi Food Corner POS - Standalone Desktop Application
+# Nawabi Food Corner POS desktop builds
 
-This directory contains the packaging files for the **Nawabi Food Corner POS Standalone Desktop Terminal** for Windows (`.exe`) and macOS (`.dmg`).
+The desktop application runs the bundled POS interface locally. Orders, the menu cache,
+and shift data remain available without internet; authenticated sync uploads queued orders
+and refreshes the catalog when connectivity returns.
 
-## Features
-- **Offline-First Execution**: Continues taking orders, settling payments, managing shifts, and printing receipts even when the internet drops.
-- **Direct Silent Thermal Printing**: ESC/POS thermal printing directly to USB, Serial COM, or LAN receipt printers without interrupting cashiers with browser print preview dialogs.
-- **Automatic Cloud Sync**: Automatically connects with `/api/pos/sync/pull` and `/api/pos/sync/push` on the central cloud server to upload offline orders and download price/menu updates.
+## Supported packages
 
----
+| Package | Operating systems | Architectures |
+| --- | --- | --- |
+| Modern Windows | Windows 10 and 11 | x64 |
+| Legacy Windows | Windows 7 SP1, 8, 8.1 | x86 and x64 |
+| macOS | Supported Intel and Apple Silicon macOS releases | x64 and arm64 |
 
-## How to Build the Standalone Installers
+Windows 7/8 uses Electron 22.3.27, the final Electron line supporting those operating
+systems. It is intentionally separated from the security-supported modern build. A
+Windows 7 machine should have SP1 and current SHA-2/root-certificate updates installed.
 
-### Prerequisites
-- Node.js (v18 or v20+) installed on your PC or Mac.
+## Build
 
-### Step 1: Install Dependencies
-Open your terminal inside the `desktop/` folder:
 ```bash
-cd desktop
-npm install
-```
-
-### Step 2: Build for Windows (.exe installer)
-To generate the Windows installer:
-```bash
+npm ci
 npm run build:win
-```
-The output `.exe` files will be generated in `desktop/dist/`:
-- `Nawabi Food Corner POS Setup 2.0.0.exe` (Standard Windows Installer)
-- `Nawabi Food Corner POS 2.0.0.exe` (Portable Standalone Executable)
-
-### Step 3: Build for macOS (.dmg file)
-To generate the macOS installer:
-```bash
+npm run build:win7
 npm run build:mac
 ```
-The output `.dmg` file will be generated in `desktop/dist/`:
-- `Nawabi Food Corner POS-2.0.0.dmg`
 
----
+Code signing and notarization require the organization's Windows code-signing certificate
+and Apple Developer ID credentials. Unsigned development artifacts are suitable for QA,
+but should not be distributed to client terminals as final production installers.
 
-## Configuration (`pos-config.json`)
-The application automatically creates `pos-config.json` inside user application data with the following customizable parameters:
-```json
-{
-  "posUrl": "http://127.0.0.1:8003/pos",
-  "apiUrl": "http://127.0.0.1:8003/api/pos/sync",
-  "terminalCode": "POS-01",
-  "printerName": "POS-80C",
-  "paperWidthMm": 80,
-  "autoCut": true,
-  "syncIntervalMinutes": 5
-}
-```
-- For production cloud deployment, set `"posUrl"` and `"apiUrl"` to your cloud server domain (e.g. `https://pos.nawabidera.com/pos`).
+## First launch
+
+Open **Settings** in the app and enter the server URL, terminal code, and the terminal
+sync token shown in **Admin > Standalone POS Apps**. The token is written with owner-only
+permissions to the operating system's application-data directory.

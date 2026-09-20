@@ -26,6 +26,14 @@ class PosAppDownloadTest extends TestCase
         $responseZip = $this->get('/downloads/pos-app/portable');
         $responseZip->assertStatus(200);
         $responseZip->assertHeader('content-disposition');
+
+        $this->get('/downloads/pos-app/windows-legacy')
+            ->assertOk()
+            ->assertHeader('content-type', 'application/vnd.microsoft.portable-executable');
+
+        $this->get('/downloads/pos-app/mac-intel')
+            ->assertOk()
+            ->assertHeader('content-type', 'application/x-apple-diskimage');
     }
 
     /**

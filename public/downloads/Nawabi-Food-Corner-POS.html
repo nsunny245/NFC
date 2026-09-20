@@ -229,6 +229,9 @@
             <button class="btn-sync" onclick="syncOfflineOrders()">
                 <span>⚡ SYNC CLOUD</span>
             </button>
+            <button class="btn-sync" onclick="openSettingsModal()" title="Terminal settings">
+                <span>⚙ SETTINGS</span>
+            </button>
         </div>
     </header>
 
@@ -367,6 +370,30 @@
             <button class="btn-confirm-pay" onclick="confirmPaymentAndPrint()">
                 ✅ COMPLETE ORDER & PRINT RECEIPT
             </button>
+        </div>
+    </div>
+
+    <!-- Terminal Configuration Modal -->
+    <div class="modal-overlay" id="settings-modal">
+        <div class="modal-box">
+            <div class="modal-title">
+                <span>⚙ Terminal Configuration</span>
+                <button class="modal-close" onclick="closeSettingsModal()">&times;</button>
+            </div>
+            <div class="input-group">
+                <span class="input-label">Cloud Server URL</span>
+                <input type="url" id="config-server-url" class="money-input" value="https://nawabifoodcorner.com" style="font-size:13px;">
+            </div>
+            <div class="input-group">
+                <span class="input-label">Terminal Code</span>
+                <input type="text" id="config-terminal-code" class="money-input" value="POS-01" maxlength="30" style="font-size:13px;">
+            </div>
+            <div class="input-group">
+                <span class="input-label">Terminal Sync Token</span>
+                <input type="password" id="config-terminal-token" class="money-input" placeholder="Paste token from Admin > Standalone POS Apps" style="font-size:13px;">
+            </div>
+            <p style="color:#94a3b8;font-size:11px;line-height:1.5;">The token authorizes this terminal to download the menu and upload offline orders. It is stored only on this computer.</p>
+            <button class="btn-confirm-pay" onclick="saveTerminalSettings()">SAVE & TEST CONNECTION</button>
         </div>
     </div>
 
@@ -1632,13 +1659,85 @@
             updateTillButton();
 
             // Trigger Silent/Browser Print for 80mm Receipt
-            setTimeout(() => {
-                window.print();
+            setTimeout(async () => {
+                const receipt = document.getElementById('thermal-receipt');
+                if (window.posDesktop && receipt) {
+                    const result = await window.posDesktop.printReceiptDirect(receipt.outerHTML);
+                    if (!result.success) window.print();
+                } else {
+                    window.print();
+                }
             }, 250);
         }
 
         // Bidirectional Cloud Synchronization Engine
-        const SYNC_SERVER_URL = 'https://nawabifoodcorner.com';
+        let terminalConfig = {
+            serverUrl: localStorage.getItem('nfc_server_url') || 'https://nawabifoodcorner.com',
+            terminalCode: localStorage.getItem('nfc_terminal_code') || 'POS-01',
+            terminalToken: localStorage.getItem('nfc_terminal_token') || ''
+        };
+
+        async function openSettingsModal() {
+            if (window.posDesktop) {
+                terminalConfig = { ...terminalConfig, ...(await window.posDesktop.getConfig()) };
+            }
+            document.getElementById('config-server-url').value = terminalConfig.serverUrl || 'https://nawabifoodcorner.com';
+            document.getElementById('config-terminal-code').value = terminalConfig.terminalCode || 'POS-01';
+            document.getElementById('config-terminal-token').value = terminalConfig.terminalToken || '';
+            document.getElementById('settings-modal').classList.add('active');
+        }
+
+        function closeSettingsModal() {
+            document.getElementById('settings-modal').classList.remove('active');
+        }
+
+        async function saveTerminalSettings() {
+            terminalConfig = {
+                serverUrl: document.getElementById('config-server-url').value.trim().replace(/\/+$/, ''),
+                terminalCode: document.getElementById('config-terminal-code').value.trim(),
+                terminalToken: document.getElementById('config-terminal-token').value.trim()
+            };
+            if (!terminalConfig.serverUrl || !terminalConfig.terminalCode || !terminalConfig.terminalToken) {
+                alert('Server URL, terminal code, and sync token are required.');
+                return;
+            }
+            if (window.posDesktop) {
+                await window.posDesktop.saveConfig(terminalConfig);
+            } else {
+                localStorage.setItem('nfc_server_url', terminalConfig.serverUrl);
+                localStorage.setItem('nfc_terminal_code', terminalConfig.terminalCode);
+                localStorage.setItem('nfc_terminal_token', terminalConfig.terminalToken);
+            }
+            closeSettingsModal();
+            await syncOfflineOrders(false);
+        }
+
+        async function apiHealth() {
+            if (window.posDesktop) return window.posDesktop.health();
+            const response = await fetch(`${terminalConfig.serverUrl}/api/pos/sync/health`, { headers: { 'X-Terminal-Token': terminalConfig.terminalToken } });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.json();
+        }
+
+        async function apiPush(orders) {
+            const payload = { terminal_code: terminalConfig.terminalCode, orders };
+            if (window.posDesktop) return window.posDesktop.push(payload);
+            const response = await fetch(`${terminalConfig.serverUrl}/api/pos/sync/push`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Terminal-Token': terminalConfig.terminalToken }, body: JSON.stringify(payload)
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.json();
+        }
+
+        async function apiPull() {
+            const payload = { terminal_code: terminalConfig.terminalCode, last_synced_at: localStorage.getItem('nfc_last_catalog_sync') || null };
+            if (window.posDesktop) return window.posDesktop.pull(payload);
+            const response = await fetch(`${terminalConfig.serverUrl}/api/pos/sync/pull`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Terminal-Token': terminalConfig.terminalToken }, body: JSON.stringify(payload)
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.json();
+        }
 
         async function syncOfflineOrders(silent = false) {
             const badgeText = document.getElementById('sync-status-text');
@@ -1648,18 +1747,13 @@
 
             try {
                 // 1. Health check ping
-                const ping = await fetch(`${SYNC_SERVER_URL}/api/pos/sync/health`, { method: 'GET' });
-                if (!ping.ok) throw new Error("Offline");
+                const ping = await apiHealth();
+                if (!ping.authenticated) throw new Error('Terminal token is missing or invalid');
 
                 // 2. Push offline orders if any exist
                 let pushMsg = '';
                 if (orders.length > 0) {
-                    const pushResp = await fetch(`${SYNC_SERVER_URL}/api/pos/sync/push`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ terminal_code: 'POS-OFFLINE', orders: orders })
-                    });
-                    const pushData = await pushResp.json();
+                    const pushData = await apiPush(orders);
                     if (pushData.status === 'success') {
                         localStorage.setItem('nfc_offline_orders', '[]');
                         pushMsg = `Pushed ${pushData.synced_count} offline orders to Cloud Hub!`;
@@ -1667,9 +1761,8 @@
                 }
 
                 // 3. Pull latest menu items & categories delta from server
-                const pullResp = await fetch(`${SYNC_SERVER_URL}/api/pos/sync/pull`, { method: 'GET' });
-                if (pullResp.ok) {
-                    const pullData = await pullResp.json();
+                const pullData = await apiPull();
+                if (pullData.status === 'success') {
                     if (pullData.categories && pullData.categories.length > 0) {
                         categories = pullData.categories.map(c => ({
                             id: c.id,
@@ -1695,6 +1788,7 @@
                     }
                     renderCategoryTabs();
                     renderMenu();
+                    localStorage.setItem('nfc_last_catalog_sync', pullData.server_time || new Date().toISOString());
                 }
 
                 updateSyncBadge(true);
@@ -1705,7 +1799,7 @@
                 console.warn("[Kiosk Sync] Server unreachable or device offline:", err);
                 updateSyncBadge(false);
                 if (!silent) {
-                    alert(`⚠️ Cloud server offline or network unavailable. All operations and orders are running 100% locally on this computer.`);
+                    alert(`⚠️ Cloud sync unavailable: ${err.message}. Orders remain safely stored on this computer.`);
                 }
             }
         }
@@ -1733,14 +1827,17 @@
         window.addEventListener('offline', () => updateSyncBadge(false));
 
         // Boot
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (window.posDesktop) {
+                terminalConfig = { ...terminalConfig, ...(await window.posDesktop.getConfig()) };
+            }
             renderCategoryTabs();
             renderMenu();
             updateSyncBadge();
             updateTillButton();
 
             // Silently attempt background sync if online
-            if (navigator.onLine) {
+            if (navigator.onLine && terminalConfig.terminalToken) {
                 syncOfflineOrders(true);
             }
 

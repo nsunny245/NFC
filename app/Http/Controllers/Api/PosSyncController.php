@@ -13,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class PosSyncController extends Controller
 {
@@ -22,10 +23,7 @@ class PosSyncController extends Controller
     public function health(Request $request): JsonResponse
     {
         $token = $request->header('X-Terminal-Token') ?? $request->query('token');
-        $terminal = null;
-        if ($token) {
-            $terminal = User::where('api_token', $token)->first();
-        }
+        $terminal = $token ? $this->authenticatedTerminal($request) : null;
 
         return response()->json([
             'status' => 'online',
@@ -42,6 +40,11 @@ class PosSyncController extends Controller
      */
     public function pull(Request $request): JsonResponse
     {
+        $terminal = $this->authenticatedTerminal($request);
+        if (!$terminal) {
+            return response()->json(['status' => 'error', 'message' => 'A valid terminal token is required.'], 401);
+        }
+
         $lastSyncedAt = $request->input('last_synced_at');
 
         // 1. Categories
@@ -68,9 +71,9 @@ class PosSyncController extends Controller
         // 3. Settings (VAT, service charge, card terminal, branding)
         $settings = PosSetting::all()->pluck('value', 'key');
 
-        // 4. Staff Accounts for Offline Login (Cashiers & Waiters)
+        // Staff secrets and password hashes must never leave the cloud API.
         $staff = User::where('is_active', true)
-            ->get(['id', 'name', 'email', 'role', 'pin', 'terminal_code', 'phone', 'password', 'updated_at']);
+            ->get(['id', 'name', 'role', 'terminal_code', 'updated_at']);
 
         // 5. Active Waiter Orders (orders placed on tables that are not yet completed)
         $activeWaiterOrders = Order::with('items.menuItem')
@@ -96,8 +99,27 @@ class PosSyncController extends Controller
      */
     public function push(Request $request): JsonResponse
     {
+        $terminal = $this->authenticatedTerminal($request);
+        if (!$terminal) {
+            return response()->json(['status' => 'error', 'message' => 'A valid terminal token is required.'], 401);
+        }
+
+        try {
+            $request->validate([
+                'terminal_code' => ['nullable', 'string', 'max:30'],
+                'orders' => ['present', 'array', 'max:250'],
+                'orders.*.uuid' => ['required', 'string', 'max:100'],
+                'orders.*.items' => ['nullable', 'array', 'max:200'],
+                'orders.*.items.*.quantity' => ['nullable', 'integer', 'min:1', 'max:1000'],
+                'orders.*.items.*.unit_price' => ['nullable', 'numeric', 'min:0', 'max:99999999'],
+                'orders.*.total' => ['nullable', 'numeric', 'min:0', 'max:999999999'],
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json(['status' => 'error', 'message' => 'Invalid offline order payload.', 'errors' => $e->errors()], 422);
+        }
+
         $ordersPayload = $request->input('orders', []);
-        $terminalCode = $request->input('terminal_code', 'POS-01');
+        $terminalCode = $terminal->terminal_code ?: 'POS-' . $terminal->id;
 
         if (!is_array($ordersPayload) || empty($ordersPayload)) {
             return response()->json([
@@ -143,9 +165,9 @@ class PosSyncController extends Controller
 
                 $order = Order::create([
                     'uuid' => $uuid,
-                    'terminal_code' => $orderData['terminal_code'] ?? $terminalCode,
-                    'user_id' => $orderData['user_id'] ?? null,
-                    'waiter_id' => $orderData['waiter_id'] ?? null,
+                    'terminal_code' => $terminalCode,
+                    'user_id' => $terminal->id,
+                    'waiter_id' => null,
                     'order_number' => $orderNumber,
                     'table_number' => $orderData['table_number'] ?? null,
                     'customer_name' => $orderData['customer_name'] ?? 'Walk-In Guest',
@@ -190,7 +212,7 @@ class PosSyncController extends Controller
             Log::error('POS Sync Push Error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return response()->json([
                 'status' => 'error',
-                'message' => 'Failed to process sync payload: ' . $e->getMessage(),
+                'message' => 'Failed to process the offline sync payload.',
             ], 500);
         }
 
@@ -200,5 +222,19 @@ class PosSyncController extends Controller
             'synced_uuids' => $syncedUuids,
             'server_time' => now()->toIso8601String(),
         ]);
+    }
+
+    private function authenticatedTerminal(Request $request): ?User
+    {
+        $token = (string) ($request->header('X-Terminal-Token') ?? '');
+        if ($token === '') {
+            return null;
+        }
+
+        return User::query()
+            ->where('api_token', $token)
+            ->where('is_active', true)
+            ->whereIn('role', ['admin', 'cashier'])
+            ->first();
     }
 }
