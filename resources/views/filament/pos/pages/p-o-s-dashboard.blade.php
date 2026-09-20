@@ -2326,21 +2326,30 @@
             <div class="pos-cart-panel">
 
                 <!-- 1. Order Type Segmented Control -->
-                <div class="pos-mode-dock">
-                    <button wire:click="selectOrderSetupType('dine_in')" 
+                <div class="pos-mode-dock" x-data="{ currentMode: @entangle('orderType').live }">
+                    <button wire:key="pos-mode-btn-dine_in"
+                            @click="currentMode = 'dine_in'"
+                            wire:click="selectOrderSetupType('dine_in')" 
                             type="button" 
+                            :class="currentMode === 'dine_in' ? 'pos-mode-btn active' : 'pos-mode-btn'"
                             class="pos-mode-btn {{ $orderType === 'dine_in' ? 'active' : '' }}">
                         <span>🍽️</span>
                         <span>Dine-In</span>
                     </button>
-                    <button wire:click="selectOrderSetupType('takeaway')" 
+                    <button wire:key="pos-mode-btn-takeaway"
+                            @click="currentMode = 'takeaway'"
+                            wire:click="selectOrderSetupType('takeaway')" 
                             type="button" 
+                            :class="currentMode === 'takeaway' ? 'pos-mode-btn active' : 'pos-mode-btn'"
                             class="pos-mode-btn {{ $orderType === 'takeaway' ? 'active' : '' }}">
                         <span>🥡</span>
                         <span>Takeaway</span>
                     </button>
-                    <button wire:click="selectOrderSetupType('delivery')" 
+                    <button wire:key="pos-mode-btn-delivery"
+                            @click="currentMode = 'delivery'"
+                            wire:click="selectOrderSetupType('delivery')" 
                             type="button" 
+                            :class="currentMode === 'delivery' ? 'pos-mode-btn active' : 'pos-mode-btn'"
                             class="pos-mode-btn {{ $orderType === 'delivery' ? 'active' : '' }}">
                         <span>🛵</span>
                         <span>Delivery</span>

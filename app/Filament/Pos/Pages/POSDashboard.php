@@ -417,8 +417,11 @@ class POSDashboard extends Page
      */
     public function selectOrderSetupType(string $type): void
     {
-        $this->orderType = $type;
-        $this->selectedTable = null;
+        $this->orderType = in_array($type, ['dine_in', 'takeaway', 'delivery']) ? $type : 'dine_in';
+        if ($this->orderType !== 'dine_in') {
+            $this->selectedTable = null;
+        }
+        $this->recalculateCart();
     }
 
     /**
