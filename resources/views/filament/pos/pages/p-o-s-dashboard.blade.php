@@ -327,10 +327,26 @@
             background: #ef4444;
             box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.35);
         }
-        .pos-sync-badge.syncing .pos-sync-dot {
-            background: #f59e0b;
-            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.35);
-            animation: posPulse 1s infinite;
+        .pos-install-app-btn {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            border: 1.5px solid #38bdf8;
+            color: #ffffff !important;
+            border-radius: 9999px;
+            padding: 5px 12px;
+            font-size: 10px;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(2, 132, 199, 0.3);
+        }
+        .pos-install-app-btn:hover {
+            background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+            transform: translateY(-1px);
         }
 
         .pos-btn-floormap {
@@ -1994,6 +2010,16 @@
                         title="Cloud Sync Engine: Click to force synchronization with Cloud Server">
                     <span id="pos-sync-dot" class="pos-sync-dot"></span>
                     <span id="pos-sync-text">ONLINE</span>
+                </button>
+
+                <!-- PWA 1-Click Install App (Windows / Mac) -->
+                <button type="button" 
+                        onclick="triggerPwaInstall()"
+                        id="pwa-install-btn"
+                        class="pos-install-app-btn" 
+                        title="Install Nawabi POS as Desktop App on this PC/Mac (Works Offline)">
+                    <span>📲</span>
+                    <span class="hidden md:inline">INSTALL APP</span>
                 </button>
 
                 <!-- 1. Instant Light / Dark Theme Mode Toggle -->

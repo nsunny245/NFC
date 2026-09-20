@@ -459,7 +459,7 @@
                         <span>🚀 Easy 1-Click Install • Zero Terminal Commands</span>
                     </div>
                     <h2 class="nfc-hero-title">
-                        Standalone POS & Waiter Apps
+                        Standalone POS Apps & Offline Terminals
                     </h2>
                     <p class="nfc-hero-desc">
                         Pre-packaged desktop installers for cashiers and counter touchscreen registers. Cashiers can continue billing, taking orders, and printing thermal receipts even during total internet dropouts.
@@ -474,6 +474,27 @@
                     <div style="font-size: 0.8rem; font-weight: 900; color: #6ee7b7;">ONLINE & REAL-TIME SYNC</div>
                 </div>
             </div>
+        </div>
+
+        <!-- Recommended PWA 1-Click Desktop App Banner -->
+        <div style="background: linear-gradient(135deg, rgba(2, 132, 199, 0.12) 0%, rgba(3, 105, 161, 0.2) 100%); border: 1.5px solid #0284c7; border-radius: 1.25rem; padding: 1.25rem 1.75rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="font-size: 1.75rem; background: #0284c7; width: 3rem; height: 3rem; border-radius: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #fff;">
+                    📲
+                </div>
+                <div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                        <span style="font-size: 1rem; font-weight: 900; color: #0284c7;" class="dark:text-sky-400">Best for Windows 10 & Mac: 1-Click Desktop App (PWA)</span>
+                        <span style="padding: 2px 8px; border-radius: 9999px; background: #0284c7; color: #fff; font-size: 0.65rem; font-weight: 900; text-transform: uppercase;">Zero Installation • 100% Offline</span>
+                    </div>
+                    <p style="font-size: 0.8rem; color: #475569; margin-top: 0.25rem; max-width: 750px; line-height: 1.4;" class="dark:text-slate-300">
+                        Open the POS terminal in Google Chrome or Microsoft Edge and click <b>📲 INSTALL APP</b> in the top bar. It instantly creates a desktop app window on your computer that runs completely offline with local bill storage and automatic cloud syncing.
+                    </p>
+                </div>
+            </div>
+            <a href="/pos" target="_blank" style="padding: 0.75rem 1.5rem; border-radius: 0.85rem; background: #0284c7; color: #fff; font-size: 0.85rem; font-weight: 900; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4); white-space: nowrap;">
+                <span>🚀 Open POS & Install</span>
+            </a>
         </div>
 
         <!-- 3-Column Download Cards Grid -->
@@ -523,22 +544,22 @@
                     <!-- 3-Step Guide -->
                     <div class="nfc-setup-box">
                         <div style="font-weight: 800; margin-bottom: 0.25rem;">Easy Setup (2 Steps):</div>
-                        <div>1. Download <b>.exe</b> or <b>.zip</b> below.</div>
-                        <div>2. Double-click to launch or run <b>Install-Desktop-Shortcut.bat</b>.</div>
+                        <div>1. Download <b>Windows POS Suite (.zip)</b> below.</div>
+                        <div>2. Extract & double-click <b>Launch-POS-Terminal.bat</b> or run <b>Install-Desktop-Shortcut.bat</b>.</div>
                     </div>
                 </div>
 
                 <!-- Footer Action Buttons -->
                 <div class="nfc-app-card-footer">
-                    <a href="{{ route('pos.app.download', ['platform' => 'exe']) }}" class="nfc-btn-win">
+                    <a href="{{ route('pos.app.download', ['platform' => 'windows']) }}" class="nfc-btn-win">
                         <svg style="width: 1.15rem; height: 1.15rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
-                        <span>Download Windows App (.exe)</span>
+                        <span>Download Windows App (.exe) / Suite (.zip)</span>
                     </a>
 
-                    <a href="{{ route('pos.app.download', ['platform' => 'windows-zip']) }}" class="nfc-btn-secondary">
-                        <span>📦 Download Portable .zip (No installation)</span>
+                    <a href="{{ route('pos.app.download', ['platform' => 'kiosk']) }}" class="nfc-btn-secondary">
+                        <span>⚡ Direct Standalone Kiosk (.html)</span>
                     </a>
                 </div>
             </div>
@@ -586,25 +607,24 @@
 
                     <!-- 3-Step Guide -->
                     <div class="nfc-setup-box">
-                        <div style="font-weight: 800; margin-bottom: 0.25rem;">Easy Setup (3 Steps):</div>
-                        <div>1. Click <b>Download .dmg</b> below.</div>
-                        <div>2. Open disk image & drag to <b>Applications</b>.</div>
-                        <div>3. Launch from Launchpad and start billing!</div>
+                        <div style="font-weight: 800; margin-bottom: 0.25rem;">Easy Setup (2 Steps):</div>
+                        <div>1. Download <b>macOS POS Suite (.zip)</b> below.</div>
+                        <div>2. Extract & double-click <b>Launch-POS-Mac.command</b>.</div>
                     </div>
                 </div>
 
                 <!-- Footer Action Buttons -->
                 <div class="nfc-app-card-footer">
-                    <a href="{{ route('pos.app.download', ['platform' => 'dmg']) }}" class="nfc-btn-mac">
+                    <a href="{{ route('pos.app.download', ['platform' => 'mac']) }}" class="nfc-btn-mac">
                         <svg style="width: 1.15rem; height: 1.15rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
-                        <span>Download macOS App (.dmg)</span>
+                        <span>Download macOS App (.dmg) / Suite (.zip)</span>
                     </a>
 
-                    <div class="nfc-btn-secondary" style="cursor: default;">
-                        <span>Works on macOS Monterey, Ventura, Sonoma & Sequoia</span>
-                    </div>
+                    <a href="{{ route('pos.app.download', ['platform' => 'kiosk']) }}" class="nfc-btn-secondary">
+                        <span>⚡ Direct Standalone Kiosk (.html)</span>
+                    </a>
                 </div>
             </div>
 

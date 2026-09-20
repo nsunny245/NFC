@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\File;
 class PosAppDownloadController extends Controller
 {
     /**
-     * Download standalone POS application binaries and installers.
+     * Download standalone POS application packages and offline suites.
      */
     public function download(Request $request, string $platform): mixed
     {
@@ -20,84 +20,55 @@ class PosAppDownloadController extends Controller
         switch (strtolower($platform)) {
             case 'windows':
             case 'exe':
-                $filename = 'Nawabi-Food-Corner-POS-Setup.exe';
-                $path = $downloadsDir . DIRECTORY_SEPARATOR . $filename;
-                $fallbackZip = $downloadsDir . DIRECTORY_SEPARATOR . 'Nawabi-Food-Corner-POS-Windows.zip';
-
-                if (File::exists($path)) {
-                    return response()->download($path, $filename, [
-                        'Content-Type' => 'application/vnd.microsoft.portable-executable',
+            case 'windows-zip':
+            case 'portable':
+                $zipPath = $downloadsDir . DIRECTORY_SEPARATOR . 'Nawabi-Food-Corner-POS-Windows.zip';
+                if (File::exists($zipPath)) {
+                    return response()->download($zipPath, 'Nawabi-Food-Corner-POS-Windows.zip', [
+                        'Content-Type' => 'application/zip',
                     ]);
-                } elseif (File::exists($fallbackZip)) {
-                    return response()->download($fallbackZip, 'Nawabi-Food-Corner-POS-Windows.zip');
                 }
                 break;
 
             case 'mac':
             case 'dmg':
-                $filename = 'Nawabi-Food-Corner-POS.dmg';
-                $path = $downloadsDir . DIRECTORY_SEPARATOR . $filename;
-                if (File::exists($path)) {
-                    return response()->download($path, $filename, [
+            case 'mac-zip':
+                $realDmg = $downloadsDir . DIRECTORY_SEPARATOR . 'Nawabi-Food-Corner-POS.dmg';
+                // Only serve DMG if it is a real disk image binary (> 10MB), not a text stub
+                if (File::exists($realDmg) && File::size($realDmg) > 10000000) {
+                    return response()->download($realDmg, 'Nawabi-Food-Corner-POS.dmg', [
                         'Content-Type' => 'application/x-apple-diskimage',
                     ]);
                 }
-                break;
 
-            case 'windows-zip':
-            case 'portable':
-                $filename = 'Nawabi-Food-Corner-POS-Windows.zip';
-                $path = $downloadsDir . DIRECTORY_SEPARATOR . $filename;
-                if (File::exists($path)) {
-                    return response()->download($path, $filename, [
+                $macZip = $downloadsDir . DIRECTORY_SEPARATOR . 'Nawabi-Food-Corner-POS-Mac.zip';
+                if (File::exists($macZip)) {
+                    return response()->download($macZip, 'Nawabi-Food-Corner-POS-Mac.zip', [
                         'Content-Type' => 'application/zip',
                     ]);
                 }
                 break;
+
+            case 'kiosk':
+            case 'html':
+            case 'offline':
+                $kioskHtml = $downloadsDir . DIRECTORY_SEPARATOR . 'pos-offline-kiosk.html';
+                if (File::exists($kioskHtml)) {
+                    return response()->download($kioskHtml, 'Nawabi-Food-Corner-POS-Offline.html', [
+                        'Content-Type' => 'text/html',
+                    ]);
+                }
+                break;
         }
 
-        // If specific package not yet populated on disk, create or serve the ready-to-run package
-        return $this->serveGeneratedPackage($platform, $downloadsDir);
-    }
-
-    /**
-     * Generate on-the-fly downloadable standalone bundle if raw binary is missing.
-     */
-    protected function serveGeneratedPackage(string $platform, string $downloadsDir): mixed
-    {
-        $targetFile = null;
-        $downloadName = null;
-        $mime = 'application/octet-stream';
-
-        if (in_array(strtolower($platform), ['windows', 'exe'])) {
-            $downloadName = 'Nawabi-Food-Corner-POS-Setup.exe';
-            $targetFile = $downloadsDir . DIRECTORY_SEPARATOR . $downloadName;
-            $mime = 'application/vnd.microsoft.portable-executable';
-        } elseif (in_array(strtolower($platform), ['mac', 'dmg'])) {
-            $downloadName = 'Nawabi-Food-Corner-POS.dmg';
-            $targetFile = $downloadsDir . DIRECTORY_SEPARATOR . $downloadName;
-            $mime = 'application/x-apple-diskimage';
-        } else {
-            $downloadName = 'Nawabi-Food-Corner-POS-Windows.zip';
-            $targetFile = $downloadsDir . DIRECTORY_SEPARATOR . $downloadName;
-            $mime = 'application/zip';
+        // Default fallback: serve Windows or Mac suite
+        $fallback = $downloadsDir . DIRECTORY_SEPARATOR . 'Nawabi-Food-Corner-POS-Windows.zip';
+        if (File::exists($fallback)) {
+            return response()->download($fallback, 'Nawabi-Food-Corner-POS-Windows.zip', [
+                'Content-Type' => 'application/zip',
+            ]);
         }
 
-        if (!File::exists($targetFile)) {
-            $content = "NAWABI FOOD CORNER - STANDALONE OFFLINE POS TERMINAL\n"
-                     . "=======================================================\n\n"
-                     . "This package provides standalone offline POS capabilities for Nawabi Food Corner.\n"
-                     . "- Direct Silent Thermal Receipt Printing (USB/COM ESC/POS)\n"
-                     . "- Offline local sales and shift register\n"
-                     . "- Automatic Cloud Sync with Central Hub\n\n"
-                     . "Terminal Code: POS-01\n"
-                     . "Server Sync URL: " . url('/api/pos/sync') . "\n";
-
-            File::put($targetFile, $content);
-        }
-
-        return response()->download($targetFile, $downloadName, [
-            'Content-Type' => $mime,
-        ]);
+        return redirect('/pos')->with('status', 'POS Terminal is directly accessible in your browser.');
     }
 }

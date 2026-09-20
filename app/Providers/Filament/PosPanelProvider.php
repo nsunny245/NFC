@@ -11,6 +11,7 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -53,6 +54,10 @@ class PosPanelProvider extends PanelProvider
             ->widgets([
                 // Widgets are disabled on cashier POS to keep it clean
             ])
+            ->renderHook(
+                PanelsRenderHook::HEAD_END,
+                fn () => view('filament.pos.pwa-head')
+            )
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
